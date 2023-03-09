@@ -1,3 +1,5 @@
 # restaurant-system-muzegram
 
-bartek elo
+Igor Bzdawka
+Bartosz Kosieradzki
+Michał Kuśmierzak
