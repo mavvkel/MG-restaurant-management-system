@@ -1,5 +1,5 @@
 # restaurant-system-muzegram
 
-Igor Bzdawka
-Bartosz Kosieradzki
-Michał Kuśmierzak
+1. Igor Bzdawka
+2. Bartosz Kosieradzki
+3. Michał Kuśmierzak
