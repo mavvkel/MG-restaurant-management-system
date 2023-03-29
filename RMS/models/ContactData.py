@@ -1,9 +1,8 @@
-import string
 
 
 class ContactData:
-    name = string
-    phone = string
-    email = string
-    chatId = string
+    name = str
+    phone = str
+    email = str
+    chatId = str
 
