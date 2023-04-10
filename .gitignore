@@ -16,6 +16,8 @@ media
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/*
+/.idea
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -67,6 +69,9 @@ wheels/
 *.egg 
 *.manifest 
 *.spec 
+
+MG_RMS/__pycache__/*
+MG_RMS/__pycache__
 
 # Installer logs 
 pip-log.txt 
