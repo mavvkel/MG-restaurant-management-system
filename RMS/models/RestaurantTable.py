@@ -1,16 +1,17 @@
 from typing import List
-from enum import Enum
-from RestaurantTableProperty import RestaurantTableProperty
+from django.db import models
+from .RestaurantTableProperty import RestaurantTableProperty
 
 
-
-class RestaurantTable:
-    def __init__(self, capacity: int, properties: List[RestaurantTableProperty]):
-        self.capacity = capacity
+class RestaurantTable(models.Model):
+    capacity = models.PositiveSmallIntegerField
+    
+    def __init__(self, capacity: int, properties: List[RestaurantTableProperty], *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.properties = properties
 
-    def addProperty(self, property: RestaurantTableProperty) -> None:
-        self.properties.append(property)
+    def add_property(self, table_property: RestaurantTableProperty) -> None:
+        self.properties.append(table_property)
 
-    def removeProperty(self, property: RestaurantTableProperty) -> None:
-        self.properties.remove(property)
+    def remove_property(self, table_property: RestaurantTableProperty) -> None:
+        self.properties.remove(table_property)

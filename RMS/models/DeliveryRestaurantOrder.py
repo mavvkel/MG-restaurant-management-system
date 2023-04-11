@@ -1,4 +1,4 @@
-import Address
+from .Address import Address
 import datetime
 import StartEndHours
 import DeliveryRestaurantOrderStatus
