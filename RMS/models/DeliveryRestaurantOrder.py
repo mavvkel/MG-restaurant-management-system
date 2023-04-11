@@ -3,11 +3,11 @@ import datetime
 import StartEndHours
 import DeliveryRestaurantOrderStatus
 import ContactData
+import RestaurantOrder
 
 
-class DeliveryRestaurantOrder:
+class DeliveryRestaurantOrder(RestaurantOrder):
     customerAddress = Address
-    date = datetime
     desiredStartEndHours = StartEndHours
     status = DeliveryRestaurantOrderStatus
     deliveryWorkerId = str

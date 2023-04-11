@@ -1,7 +1,8 @@
 import RestaurantTableBooking
+import RestaurantOrder
 
 
-class StationaryRestaurantOrder:
+class StationaryRestaurantOrder(RestaurantOrder):
     tableBooking = RestaurantTableBooking
     customerComments = str
 

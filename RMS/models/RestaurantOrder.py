@@ -2,11 +2,13 @@ from ContactData import ContactData
 from RestaurantMenuEntry import RestaurantMenuEntry
 from typing import Dict
 from decimal import Decimal
-
+import datetime
 
 class RestaurantOrder:
     customer_contact_data = ContactData
     menu_selection = Dict[RestaurantMenuEntry, int]
+    date = datetime
+
 
     def __init__(self, customer_contact_data, menu_selection):
         self.customer_contact_data = customer_contact_data
