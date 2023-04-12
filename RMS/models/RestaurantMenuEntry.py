@@ -13,7 +13,7 @@ class RestaurantMenuEntry(models.Model):
                                                            message='Name must be at least 2 characters long.')])
     price = models.DecimalField(max_digits=19,
                                 decimal_places=2,
-                                validators=[MinValueValidator(limit_value=0,
+                                validators=[MinValueValidator(limit_value=0.0,
                                                               message='Price cannot be negative.')])
 
     def __str__(self):

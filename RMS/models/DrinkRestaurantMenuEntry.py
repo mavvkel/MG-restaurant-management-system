@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 
 
 class DrinkRestaurantMenuEntry(RestaurantMenuEntry):
-    contains_alcohol = models.BooleanField(name='Contains alcohol',
+    contains_alcohol = models.BooleanField(verbose_name='Contains alcohol',
                                            default=False)
     volume = models.DecimalField(max_digits=19,
                                  decimal_places=4,
