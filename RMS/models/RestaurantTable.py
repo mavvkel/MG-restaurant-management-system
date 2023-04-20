@@ -3,7 +3,6 @@ from enum import Enum
 from RestaurantTableProperty import RestaurantTableProperty
 
 
-
 class RestaurantTable:
     def __init__(self, capacity: int, properties: List[RestaurantTableProperty]):
         self.capacity = capacity

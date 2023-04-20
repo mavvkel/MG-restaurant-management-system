@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class RestaurantTableProperty(Enum):
     NEAR_WINDOW = 1
     NEAR_KITCHEN = 2
