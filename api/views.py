@@ -27,9 +27,9 @@ class RestaurantTableAPI(APIView):
     def post(self, request, format=None):
         serializer = RestaurantTableSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  # how to check if a serializer saved a value
-            # We don't need to check if it didn't create a new instance since save already
-            # updates the content if it does exist
+            if serializer.validated_data in RestaurantTable.objects.all():
+                return Response(serializer.data, status=status.HTTP_409_CONFLICT)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
