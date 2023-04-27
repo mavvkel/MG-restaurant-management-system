@@ -7,26 +7,20 @@ from decimal import Decimal
 
 class DishRestaurantMenuEntryTestCase(TestCase):
     def setUp(self):
-        eggs = DishRestaurantMenuEntry.objects.create(name='Eggs Benedict',
-                                                      price=Decimal('29.99'),
-                                                      stage=DishRestaurantMenuEntry.DishStage.MAIN_COURSE,
-                                                      weight=Decimal('0.3'))
-        toast = DishRestaurantMenuEntry.objects.create(name='Toast with ham',
-                                                       price=Decimal('9.99'),
-                                                       stage=DishRestaurantMenuEntry.DishStage.MAIN_COURSE,
-                                                       weight=Decimal('0.1'))
-        eggs.full_clean()
-        eggs.save()
-        toast.full_clean()
-        toast.save()
+        self.eggs = DishRestaurantMenuEntry.objects.create(name='Eggs Benedict',
+                                                           price=Decimal('29.99'),
+                                                           stage=DishRestaurantMenuEntry.DishStage.MAIN_COURSE,
+                                                           weight=Decimal('0.3'))
+        self.toast = DishRestaurantMenuEntry.objects.create(name='Toast with ham',
+                                                            price=Decimal('9.99'),
+                                                            stage=DishRestaurantMenuEntry.DishStage.MAIN_COURSE,
+                                                            weight=Decimal('0.1'))
 
     def test_create_clean_and_save(self):
-        crepes = DishRestaurantMenuEntry.objects.create(name='Crepes',
-                                                        price=Decimal('5.99'),
-                                                        stage=DishRestaurantMenuEntry.DishStage.DESSERT,
-                                                        weight='0.24')
-        crepes.full_clean()
-        crepes.save()
+        self.crepes = DishRestaurantMenuEntry.objects.create(name='Crepes',
+                                                             price=Decimal('5.99'),
+                                                             stage=DishRestaurantMenuEntry.DishStage.DESSERT,
+                                                             weight='0.24')
 
         crepes_read = DishRestaurantMenuEntry.objects.get(name='Crepes')
         self.assertEqual(crepes_read.price, Decimal('5.99'))
@@ -34,11 +28,11 @@ class DishRestaurantMenuEntryTestCase(TestCase):
         self.assertEqual(crepes_read.weight, Decimal('0.24'))
 
     def test_assign_nonexistent_DishStage(self):
-        eggs = DishRestaurantMenuEntry.objects.get(name='Eggs Benedict')
-        eggs.stage = 6
+        self.eggs = DishRestaurantMenuEntry.objects.get(name='Eggs Benedict')
+        self.eggs.stage = 6
 
         with self.assertRaises(ValidationError) as cm:
-            eggs.full_clean()
+            self.eggs.full_clean()
 
         ex = cm.exception
         self.assertIn('stage', ex.error_dict)
@@ -50,11 +44,11 @@ class DishRestaurantMenuEntryTestCase(TestCase):
         self.assertEqual(6, stage_exception.args[2]['value'])
 
     def test_assign_negative_price(self):
-        toast = DishRestaurantMenuEntry.objects.get(name='Toast with ham')
-        toast.price = Decimal('-2.44')
+        self.toast = DishRestaurantMenuEntry.objects.get(name='Toast with ham')
+        self.toast.price = Decimal('-2.44')
 
         with self.assertRaises(ValidationError) as cm:
-            toast.full_clean()
+            self.toast.full_clean()
 
         ex = cm.exception
         self.assertIn('price', ex.error_dict)
@@ -64,11 +58,11 @@ class DishRestaurantMenuEntryTestCase(TestCase):
         self.assertEqual('Price cannot be negative.', price_exception.message)
 
     def test_assign_negative_weight(self):
-        toast = DishRestaurantMenuEntry.objects.get(name='Toast with ham')
-        toast.weight = Decimal('-0.888')
+        self.toast = DishRestaurantMenuEntry.objects.get(name='Toast with ham')
+        self.toast.weight = Decimal('-0.888')
 
         with self.assertRaises(ValidationError) as cm:
-            toast.full_clean()
+            self.toast.full_clean()
 
         ex = cm.exception
         self.assertIn('weight', ex.error_dict)
@@ -78,12 +72,12 @@ class DishRestaurantMenuEntryTestCase(TestCase):
         self.assertEqual('Weight cannot be negative.', weight_exception.message)
 
     def test_create_dish_with_empty_name(self):
-        empty_name_dish = DishRestaurantMenuEntry.objects.create(name='',
-                                                                 price=Decimal('9.99'),
-                                                                 stage=DishRestaurantMenuEntry.DishStage.MAIN_COURSE,
-                                                                 weight=Decimal('4.13'))
+        self.empty_name_dish = DishRestaurantMenuEntry.objects.create(name='',
+                                                                      price=Decimal('9.99'),
+                                                                      stage=DishRestaurantMenuEntry.DishStage.MAIN_COURSE,
+                                                                      weight=Decimal('4.13'))
         with self.assertRaises(ValidationError) as cm:
-            empty_name_dish.full_clean()
+            self.empty_name_dish.full_clean()
 
         ex = cm.exception
         self.assertIn('name', ex.error_dict)
@@ -95,17 +89,13 @@ class DishRestaurantMenuEntryTestCase(TestCase):
 
 class DrinkRestaurantMenuEntryTestCase(TestCase):
     def setUp(self):
-        coke = DrinkRestaurantMenuEntry.objects.create(name='Coca Cola',
-                                                       price=Decimal('2.99'),
-                                                       volume=Decimal('0.33'))
-        booze = DrinkRestaurantMenuEntry.objects.create(name='Heineken',
-                                                        price=Decimal('5.40'),
-                                                        contains_alcohol=True,
-                                                        volume=Decimal('0.5'))
-        coke.full_clean()
-        coke.save()
-        booze.full_clean()
-        booze.save()
+        self.coke = DrinkRestaurantMenuEntry.objects.create(name='Coca Cola',
+                                                            price=Decimal('2.99'),
+                                                            volume=Decimal('0.33'))
+        self.booze = DrinkRestaurantMenuEntry.objects.create(name='Heineken',
+                                                             price=Decimal('5.40'),
+                                                             contains_alcohol=True,
+                                                             volume=Decimal('0.5'))
 
     def test_create_clean_and_save(self):
 
@@ -148,13 +138,13 @@ class DrinkRestaurantMenuEntryTestCase(TestCase):
         self.assertEqual('Volume cannot be negative.', volume_exception.message)
 
     def test_create_drink_with_single_letter_name(self):
-        empty_name_drink = DrinkRestaurantMenuEntry.objects.create(name='A',
-                                                                   price=Decimal('99.40'),
-                                                                   contains_alcohol=False,
-                                                                   volume=Decimal('0.5'))
+        self.empty_name_drink = DrinkRestaurantMenuEntry.objects.create(name='A',
+                                                                        price=Decimal('99.40'),
+                                                                        contains_alcohol=False,
+                                                                        volume=Decimal('0.5'))
 
         with self.assertRaises(ValidationError) as cm:
-            empty_name_drink.full_clean()
+            self.empty_name_drink.full_clean()
 
         ex = cm.exception
         self.assertIn('name', ex.error_dict)
