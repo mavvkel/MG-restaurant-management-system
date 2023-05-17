@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class RestaurantAvailability:
     def __init__(self):
         self._schedule = {}

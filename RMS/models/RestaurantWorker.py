@@ -1,11 +1,28 @@
-from RestaurantWorkerRole import RestaurantWorkerRole
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from RMS.models.RestaurantAvailability import RestaurantAvailability
+from django.core.validators import MinLengthValidator
+from django.core.validators import MinValueValidator
 
-class RestaurantWorker:
-    def __init__(self, name, role, availability):
-        self.name = name
-        self.role = role
-        self.availability = availability
-        self.tables = []
+
+class RestaurantWorker(models.Model):
+    class RestaurantWorkerRole(models.IntegerChoices):
+        WAITER = 1, _('Waiter')
+        DISHWASHER = 2, _('Dishwasher')
+        CHEF = 3, _('Chef')
+        MANAGER = 4, _('Manager')
+        CLEANER = 5, _('Cleaner')
+
+    name = models.CharField(max_length=200,
+                            validators=[MinLengthValidator(limit_value=2,
+                                                           message='Name must be at least 2 characters long.')])
+    role = models.IntegerField(choices=RestaurantWorkerRole.choices)
+
+    # Not certain it works like that
+    availability = RestaurantAvailability
+
+    def __str__(self):
+        return self.name
 
     def get_name(self):
         return self.name

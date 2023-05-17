@@ -9,22 +9,24 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from CMS.models import tempCustomer
 from .serializers import *
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
+from RMS.models.RestaurantWorker import RestaurantWorker
 
-@api_view(['GET'])
-def getData(request):
-    items = tempCustomer.objects.all()
-    serializer = tempCustomerSerializer(items, many= True)
-    return Response(serializer.data)
 
-@api_view(['POST'])
-def addItem(request):
-    serializer = tempCustomerSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
-
+# @api_view(['GET'])
+# def getData(request):
+#     items = tempCustomer.objects.all()
+#     serializer = tempCustomerSerializer(items, many= True)
+#     return Response(serializer.data)
+#
+# @api_view(['POST'])
+# def addItem(request):
+#     serializer = tempCustomerSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#     return Response(serializer.data)
 
 # TODO: TokenAuthentication should have the keyword set to 'bearer'
+
 class RestaurantMenuEntryListView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -38,3 +40,11 @@ class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = DishRestaurantMenuEntrySerializer
     queryset = DishRestaurantMenuEntry.objects.all()
+
+
+class RestaurantWorkerListView(generics.ListCreateAPIView):
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
+    serializer_class = RestaurantWorkerSerializer
+    queryset = RestaurantWorker.objects.all()
+
