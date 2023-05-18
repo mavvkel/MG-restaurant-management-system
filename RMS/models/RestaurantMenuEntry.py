@@ -15,6 +15,7 @@ class RestaurantMenuEntry(models.Model):
                                 decimal_places=2,
                                 validators=[MinValueValidator(limit_value=0.0,
                                                               message='Price cannot be negative.')])
+    objects = models.Manager()
 
     def __str__(self):
         return self.name
