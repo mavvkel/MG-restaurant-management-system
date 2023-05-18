@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.core.validators import MinValueValidator
+from polymorphic.query import PolymorphicQuerySet
+from polymorphic.managers import PolymorphicManager
+from polymorphic.models import PolymorphicModel
 
 
 class RestaurantMenuEntry(models.Model):

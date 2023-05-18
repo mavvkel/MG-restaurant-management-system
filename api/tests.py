@@ -50,6 +50,7 @@ class RestaurantMenuEntryListViewTests(TestCase):
                 'stage': '2',
                 'weight': '0.250'
             }
+
         request = self.factory.post(url, body, format='json')
         force_authenticate(request, user=self.test_user1)
         response = self.list_view(request)
