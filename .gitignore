@@ -1,3 +1,5 @@
+pyrightconfig.json
+
 # Django #
 *.log
 *.pot
