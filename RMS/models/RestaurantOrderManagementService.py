@@ -2,12 +2,15 @@ import StationaryRestaurantOrder
 import DeliveryRestaurantOrder
 import RestaurantOrder
 import RestaurantTableBooking
+from django.db import models
 
 
-class RestaurantOrderManagementService:
+class RestaurantOrderManagementService(models.Model):
+
     def __init__(self, restaurant):
         self._restaurant = restaurant
         self._orders = []
+        self._tables = models.ForeignKey(RestaurantOrder, on_delete=models.CASCADE)
 
     def get_order_history(self, date_start, date_end):
         order_history = []
@@ -30,7 +33,7 @@ class RestaurantOrderManagementService:
                 delivery_orders.append(order)
         return delivery_orders
 
-    # TO DO: def find_booked_tables(self, time_start, time_end):
+    def find_booked_tables(self, time_start, time_end):
 
     # TO DO: def find_available_tables(self, time_start, time_end, properties):
 
