@@ -1,9 +1,24 @@
 from django.db import models
+import json
+from RMS.models.WeekDay import WeekDay
+from RMS.models.StartEndHours import StartEndHours
+import datetime
+from json import JSONEncoder
 
 
-class RestaurantAvailability:
-    def __init__(self):
-        self._schedule = {}
+def default(obj):
+    if isinstance(obj, (datetime.date, datetime.datetime)):
+        return obj.isoformat()
+
+
+class RestaurantAvailability(models.Model):
+    _schedule = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def toJson(self):
+        return json.dumps(self._schedule, default=str)
 
     def get_schedule(self):
         return self._schedule

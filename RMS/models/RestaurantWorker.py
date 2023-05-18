@@ -13,6 +13,12 @@ class RestaurantWorker(models.Model):
         MANAGER = 4, _('Manager')
         CLEANER = 5, _('Cleaner')
 
+    def __init__(self, name, role, availability=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        self.role = role
+        self.availability = availability
+
     name = models.CharField(max_length=200,
                             validators=[MinLengthValidator(limit_value=2,
                                                            message='Name must be at least 2 characters long.')])

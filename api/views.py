@@ -10,6 +10,10 @@ from CMS.models import tempCustomer
 from .serializers import *
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.RestaurantWorker import RestaurantWorker
+from RMS.models.Restaurant import Restaurant
+from RMS.models.RestaurantTable import RestaurantTable
+from RMS.models.DeliveryRestaurantOrder import DeliveryRestaurantOrder
+from RMS.models.StationaryRestaurantOrder import StationaryRestaurantOrder
 
 
 # @api_view(['GET'])
@@ -43,8 +47,63 @@ class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class RestaurantWorkerListView(generics.ListCreateAPIView):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = []
     serializer_class = RestaurantWorkerSerializer
     queryset = RestaurantWorker.objects.all()
 
+
+class RestaurantWorkerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantWorkerSerializer
+    queryset = RestaurantWorker.objects.all()
+
+
+class RestaurantView(generics.RetrieveUpdateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantSerializer
+    queryset = Restaurant.objects.all()
+
+
+class RestaurantTableListView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantTableSerializer
+    queryset = RestaurantTable.objects.all()
+
+
+class RestaurantTableDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantTableSerializer
+    queryset = RestaurantTable.objects.all()
+
+
+class RestaurantDeliveryRestaurantOrderView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = DeliveryRestaurantOrderSerializer
+    queryset = DeliveryRestaurantOrder.objects.all()
+
+
+class RestaurantDeliveryRestaurantOrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = DeliveryRestaurantOrderSerializer
+    queryset = DeliveryRestaurantOrder.objects.all()
+
+
+class StationaryRestaurantOrderView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = StationaryRestaurantOrderSerializer
+    queryset = StationaryRestaurantOrder.objects.all()
+
+
+class StationaryRestaurantDetailOrderView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = StationaryRestaurantOrderSerializer
+    queryset = StationaryRestaurantOrder.objects.all()

@@ -1,9 +1,26 @@
-class Restaurant:
-    def __init__(self, availability):
+from django.db import models
+from typing import List
+from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
+from RMS.models.RestaurantWorker import RestaurantWorker
+from RMS.models.RestaurantTable import RestaurantTable
+from RMS.models.RestaurantAvailability import RestaurantAvailability
+
+
+class Restaurant(models.Model):
+    def __init__(self, availability, workers: List[RestaurantWorker], tables: List[RestaurantTable],
+                 menu: List[RestaurantMenuEntry], *args, **kwargs) -> None:
         self._availability = availability
-        self._workers = []
-        self._tables = []
-        self._menu = []
+        self._workers = workers
+        self._tables = tables
+        self._menu = menu
+
+    _menu: List[RestaurantMenuEntry]
+    _workers: List[RestaurantWorker]
+    _tables: List[RestaurantTable]
+    _availability = models.ForeignKey(RestaurantAvailability, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self._menu
 
     def get_availability(self):
         return self._availability

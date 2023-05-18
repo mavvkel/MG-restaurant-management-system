@@ -5,7 +5,7 @@ from decimal import Decimal
 from django.db import models
 
 
-class RestaurantOrder:
+class RestaurantOrder(models.Model):
     customer_contact_data = models.ForeignKey(ContactData, on_delete=models.CASCADE)
     menu_selection = models.ManyToManyField(RestaurantMenuEntry, through='MenuSelection')
     date = models.DateTimeField()

@@ -1,7 +1,8 @@
 from enum import Enum
+import json
 
 
-class WeekDay(Enum):
+class WeekDay(int, Enum):
     MONDAY = 1
     TUESDAY = 2
     WEDNESDAY = 3

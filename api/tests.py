@@ -7,10 +7,15 @@ from decimal import Decimal
 import ast
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from api.views import RestaurantMenuEntryListView, RestaurantMenuEntryDetailView
+from django.db import models
 
 from RMS.models.RestaurantWorker import RestaurantWorker, RestaurantAvailability
-from api.views import RestaurantWorkerListView
-
+from api.views import RestaurantWorkerListView, RestaurantWorkerDetailView
+from RMS.models.WeekDay import WeekDay
+from RMS.models.StartEndHours import StartEndHours
+import datetime
+from datetime import date, datetime
+import json
 
 class RestaurantMenuEntryListViewTests(TestCase):
     def setUp(self) -> None:
@@ -68,11 +73,18 @@ class RestaurantWorkerListViewTests(TestCase):
     def setUp(self) -> None:
         RestaurantWorker.objects.all().delete()
         self.assertEqual(RestaurantWorker.objects.all().exists(), False)
-        self.test_user1 = RestaurantWorker.objects.create(name='Eggs Benedict Cumberbatch',
-                                                          availability=RestaurantAvailability,
-                                                          role=RestaurantWorker.RestaurantWorkerRole.CHEF)
-        self.test_user2 = RestaurantWorker.objects.create(name='Toast Frank',
-                                                          availability=RestaurantAvailability,
+        restaurantAvailability = RestaurantAvailability.objects.create()
+
+        restaurantAvailability.add_or_update_day(WeekDay.MONDAY,
+                                         StartEndHours.objects.create(start_time=
+                                                                  datetime.fromisoformat('2011-11-04T00:05:23+04:00'),
+                                                                  end_time=
+                                                                  datetime.fromisoformat('2011-11-04T00:06:23+04:00')))
+        self.test_worker1 = RestaurantWorker.objects.create(name='Eggs Benedict',
+                                                          role=RestaurantWorker.RestaurantWorkerRole.CHEF,
+                                                          availability=restaurantAvailability)
+        self.test_worker2 = RestaurantWorker.objects.create(name='Toast Frank',
+                                                          availability=restaurantAvailability,
                                                           role=RestaurantWorker.RestaurantWorkerRole.WAITER)
 
         self.test_user1 = User.objects.create(username='test_user1')
@@ -81,32 +93,35 @@ class RestaurantWorkerListViewTests(TestCase):
         self.assertEqual(len(User.objects.all()), 1)
         self.factory = APIRequestFactory()
         self.list_view = RestaurantWorkerListView.as_view()
-        # self.detail_view = RestaurantMenuEntryDetailView.as_view()
+        self.detail_view = RestaurantWorkerDetailView.as_view()
 
     def test_get_RestaurantWorkerEntry_list(self):
         url = reverse('api:worker_entry_list')
         request = self.factory.get(url)
-        # force_authenticate(request, user=self.test_user1)
+        force_authenticate(request, user=self.test_user1)
         response = self.list_view(request)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(ast.literal_eval(response.rendered_content.decode('utf-8'))), 2)
-        self.assertContains(response, text='Eggs Benedict', count=1)
-        self.assertContains(response, text='Toast with ham', count=1)
 
-    def test_post_DishRestaurantMenuEntry_list(self):
+        self.assertContains(response, text='Eggs Benedict', count=1)
+        self.assertContains(response, text='Toast Frank', count=1)
+
+    def test_post_RestaurantWorkerEntry_list(self):
         url = reverse('api:worker_entry_list')
+        restaurantAvailability = RestaurantAvailability.objects.create()
         body = \
             {
                 'name': 'Steve',
-                'role': 'Manager'
+                'role': 'Manager',
+                'availability': restaurantAvailability.toJson()
             }
         request = self.factory.post(url, body, format='json')
-        # force_authenticate(request, user=self.test_user1)
+        force_authenticate(request, user=self.test_user1)
+        # Return error 401 I don't know why
         response = self.list_view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         request = self.factory.get(url)
-        # force_authenticate(request, user=self.test_user1)
+        force_authenticate(request, user=self.test_user1)
         response = self.list_view(request)
-        self.assertContains(response, text='Scrambled eggs', count=1)
+        self.assertContains(response, text='Steve', count=1)

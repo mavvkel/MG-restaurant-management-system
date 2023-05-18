@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 
 class StartEndHours(models.Model):
@@ -9,8 +10,11 @@ class StartEndHours(models.Model):
         super().__init__(*args, **kwargs)
         if start_time >= end_time:
             raise ValueError("Start time must be before end time")
-        self._start_time = start_time
-        self._end_time = end_time
+        self.start_time = start_time
+        self.end_time = end_time
+
+    # def toJson(self):
+    #     return json.dumps([self.start_time, self.end_time], indent=2)
 
     def get_start_time(self):
         return self._start_time
@@ -32,4 +36,3 @@ class StartEndHours(models.Model):
 
     def contains_date(self, dt):
         return self._start_time <= dt <= self._end_time
-
