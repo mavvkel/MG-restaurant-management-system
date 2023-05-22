@@ -1,9 +1,8 @@
 from .Address import Address
 import datetime
-import StartEndHours
-import DeliveryRestaurantOrderStatus
-import ContactData
-import RestaurantOrder
+from RMS.models.StartEndHours import StartEndHours
+from RMS.models.ContactData import ContactData
+from RMS.models.RestaurantOrder import RestaurantOrder
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -18,7 +17,7 @@ class DeliveryRestaurantOrder(RestaurantOrder):
 
     customerAddress = models.ForeignKey(Address, on_delete=models.CASCADE)
     desiredStartEndHours = models.ForeignKey(StartEndHours, on_delete=models.CASCADE)
-    status = models.ForeignKey(DeliveryRestaurantOrderStatus, on_delete=models.CASCADE)
+    status = DeliveryRestaurantOrderStatus
     deliveryWorkerId = models.CharField(max_length=200)
     deliveryWorkerContactData = models.ForeignKey(ContactData, on_delete=models.CASCADE)
 

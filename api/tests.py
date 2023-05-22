@@ -17,6 +17,7 @@ import datetime
 from datetime import date, datetime
 import json
 
+
 class RestaurantMenuEntryListViewTests(TestCase):
     def setUp(self) -> None:
         DishRestaurantMenuEntry.objects.all().delete()
@@ -76,16 +77,18 @@ class RestaurantWorkerListViewTests(TestCase):
         restaurantAvailability = RestaurantAvailability.objects.create()
 
         restaurantAvailability.add_or_update_day(WeekDay.MONDAY,
-                                         StartEndHours.objects.create(start_time=
-                                                                  datetime.fromisoformat('2011-11-04T00:05:23+04:00'),
-                                                                  end_time=
-                                                                  datetime.fromisoformat('2011-11-04T00:06:23+04:00')))
+                                                 StartEndHours.objects.create(start_time=
+                                                                              datetime.fromisoformat(
+                                                                                  '2011-11-04T00:05:23+04:00'),
+                                                                              end_time=
+                                                                              datetime.fromisoformat(
+                                                                                  '2011-11-04T00:06:23+04:00')))
         self.test_worker1 = RestaurantWorker.objects.create(name='Eggs Benedict',
-                                                          role=RestaurantWorker.RestaurantWorkerRole.CHEF,
-                                                          availability=restaurantAvailability)
+                                                            role=RestaurantWorker.RestaurantWorkerRole.CHEF,
+                                                            availability=restaurantAvailability)
         self.test_worker2 = RestaurantWorker.objects.create(name='Toast Frank',
-                                                          availability=restaurantAvailability,
-                                                          role=RestaurantWorker.RestaurantWorkerRole.WAITER)
+                                                            availability=restaurantAvailability,
+                                                            role=RestaurantWorker.RestaurantWorkerRole.WAITER)
 
         self.test_user1 = User.objects.create(username='test_user1')
         self.test_user1.set_password('123')

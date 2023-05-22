@@ -1,6 +1,6 @@
 from django.db import models
-import RestaurantTable
-import StartEndHours
+from RMS.models.RestaurantTable import RestaurantTable
+from RMS.models.StartEndHours import StartEndHours
 
 
 class RestaurantTableBooking(models.Model):

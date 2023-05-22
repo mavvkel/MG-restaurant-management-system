@@ -1,5 +1,6 @@
-from ContactData import ContactData
-from RestaurantMenuEntry import RestaurantMenuEntry
+from RMS.models.ContactData import ContactData
+from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
+from RMS.models.MenuSelection import MenuSelection
 from typing import Dict
 from decimal import Decimal
 from django.db import models
@@ -7,7 +8,7 @@ from django.db import models
 
 class RestaurantOrder(models.Model):
     customer_contact_data = models.ForeignKey(ContactData, on_delete=models.CASCADE)
-    menu_selection = models.ManyToManyField(RestaurantMenuEntry, through='MenuSelection')
+    menu_selection = models.ManyToManyField('RMS.RestaurantMenuEntry', related_name='models', through='MenuSelection')
     date = models.DateTimeField()
 
     def add_or_update_menu_entry(self, menu_entry, count):
@@ -27,8 +28,10 @@ class RestaurantOrder(models.Model):
             total_price += menu_selection.menu_entry.price * menu_selection.count
         return total_price
 
-
-class MenuSelection(models.Model):
-    order = models.ForeignKey(RestaurantOrder, on_delete=models.CASCADE)
-    menu_entry = models.ForeignKey(RestaurantMenuEntry, on_delete=models.CASCADE)
-    count = models.PositiveIntegerField()
+# class MenuSelection(models.Model):
+#     order = models.ForeignKey(RestaurantOrder, on_delete=models.CASCADE)
+#     menu_entry = models.ForeignKey(RestaurantMenuEntry, on_delete=models.CASCADE)
+#     count = models.PositiveIntegerField()
+#
+#     def __str__(self):
+#         return self.count

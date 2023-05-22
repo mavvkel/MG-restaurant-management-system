@@ -1,5 +1,5 @@
-import RestaurantTableBooking
-import RestaurantOrder
+from RMS.models.RestaurantTableBooking import RestaurantTableBooking
+from RMS.models.RestaurantOrder import RestaurantOrder
 from django.db import models
 
 
