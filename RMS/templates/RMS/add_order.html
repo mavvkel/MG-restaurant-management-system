@@ -1,0 +1,18 @@
+{% extends 'RMS/main.html' %}
+{% block content %}
+<div>
+<h2>Choose item:</h2>
+    <div>
+        <label>Dish Menu:</label>
+        {% for item in data %}
+            <li>{{ item.name }} - {{ item.price }}</li>
+        {% endfor %}
+    </div>
+    <div>
+        <label>Drink Menu:</label>
+    </div>
+</div>
+
+
+
+{% endblock content %}

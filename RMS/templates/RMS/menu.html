@@ -1,0 +1,41 @@
+{% extends 'RMS/main.html' %}
+{% block content %}
+
+    <div>
+        <div>
+
+            <label>Dish Menu:</label>
+            <a href="{% url 'dish_form' %}"><button>Add Dish</button></a>
+
+            <h3>Starter</h3>
+            {% for item in category1 %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Main course</h3>
+            {% for item in category2 %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Soup</h3>
+            {% for item in category3 %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Salad</h3>
+            {% for item in category4 %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Dessert</h3>
+            {% for item in category5 %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+        </div>
+        <div>
+            <label>Drink Menu:</label>
+        </div>
+    </div>
+
+{% endblock content %}

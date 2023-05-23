@@ -1,16 +1,26 @@
 {% extends 'RMS/main.html' %}
 {% block content %}
 <div>
-    <div style="background-color: red">
+    <div>
         <a class="button" href="{% url 'orders' %}">
-            Show Orders
+            <h1>Show Orders</h1>
         </a>
     </div>
 
 
 
-    <button>Add New Order</button>
+    <div>
+        <a class="button" href="{% url 'add-order' %}">
+            <h1>Add New Order</h1>
+        </a>
+    </div>
+
     <button>Table Booking</button>
+    <div>
+        <a href="{% url 'menu' %}"><button>Menu</button></a>
+    </div>
+
+
 </div>
 
 {% endblock content %}
