@@ -59,7 +59,7 @@ class RestaurantMenuEntryListViewTests(APITestCase):
 
     def test_post_Dish_to_RestaurantMenuEntry_list(self):
         """
-        Ensure unauthenticated POST method on /api/restaurant/menu endpoint is working.
+        Ensure unauthenticated POST method with DishRestaurantMenuEntry on /api/restaurant/menu endpoint is working.
         """
         url = reverse('api:menu_entry_list')
         data = \
@@ -80,3 +80,27 @@ class RestaurantMenuEntryListViewTests(APITestCase):
                             status_code=201)
         self.assertEqual(DishRestaurantMenuEntry.objects.count(), previous_count + 1)
         self.assertTrue(DishRestaurantMenuEntry.objects.filter(name='Scrambled eggs').exists())
+
+    def test_post_Drink_to_RestaurantMenuEntry_list(self):
+        """
+        Ensure unauthenticated POST method with DrinkRestaurantMenuEntry on /api/restaurant/menu endpoint is working.
+        """
+        url = reverse('api:menu_entry_list')
+        data = \
+            {
+                'name': 'Fanta',
+                'price': '1.39',
+                'contains_alcohol': False,
+                'volume': '0.33',
+                'resourcetype': 'DrinkRestaurantMenuEntry'
+            }
+
+        previous_count = DrinkRestaurantMenuEntry.objects.count()
+        response = self.client.post(url, data, format='json')
+        # force_authenticate(request, user=self.test_user1)
+        self.assertContains(response=response,
+                            text='Fanta',
+                            count=1,
+                            status_code=201)
+        self.assertEqual(DrinkRestaurantMenuEntry.objects.count(), previous_count + 1)
+        self.assertTrue(DrinkRestaurantMenuEntry.objects.filter(name='Fanta').exists())
