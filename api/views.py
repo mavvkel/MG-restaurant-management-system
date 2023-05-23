@@ -5,10 +5,19 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.permissions import *
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import BasicAuthentication
 from CMS.models import tempCustomer
+from RMS.models import RestaurantMenuEntry
 from .serializers import *
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
+from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
+from rest_framework.authentication import TokenAuthentication
+from itertools import chain
+
+
+class BearerAuthentication(TokenAuthentication):
+    keyword = 'Bearer'
+
 
 @api_view(['GET'])
 def getData(request):
@@ -24,17 +33,20 @@ def addItem(request):
     return Response(serializer.data)
 
 
-# TODO: TokenAuthentication should have the keyword set to 'bearer'
 class RestaurantMenuEntryListView(generics.ListCreateAPIView):
-    authentication_classes = []
+
+    authentication_classes = [BearerAuthentication, BasicAuthentication]
     permission_classes = []
-    serializer_class = DishRestaurantMenuEntrySerializer
-    queryset = DishRestaurantMenuEntry.objects.all()
+    serializer_class = RestaurantMenuEntryPolymorphicSerializer
+    queryset = RestaurantMenuEntry.objects.all()
+    # queryset = RestaurantMenuEntry.objects.instance_of(DrinkRestaurantMenuEntry) \
+    #     | RestaurantMenuEntry.objects.instance_of(DishRestaurantMenuEntry.objects)
 
 
 # TODO: status 409
 class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = []
-    permission_classes = []
+
+    authentication_classes = [BearerAuthentication]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = DishRestaurantMenuEntrySerializer
     queryset = DishRestaurantMenuEntry.objects.all()
