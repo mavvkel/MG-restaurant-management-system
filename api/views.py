@@ -36,8 +36,8 @@ def addItem(request):
 class RestaurantMenuEntryListView(generics.ListCreateAPIView):
     authentication_classes = [BearerAuthentication, BasicAuthentication]
     permission_classes = []
-    serializer_class = DishRestaurantMenuEntrySerializer
-    queryset = DishRestaurantMenuEntry.objects.all()
+    serializer_class = RestaurantMenuEntryPolymorphicSerializer
+    queryset = RestaurantMenuEntry.objects.all()
     # queryset = RestaurantMenuEntry.objects.instance_of(DrinkRestaurantMenuEntry) \
     #     | RestaurantMenuEntry.objects.instance_of(DishRestaurantMenuEntry.objects)
 

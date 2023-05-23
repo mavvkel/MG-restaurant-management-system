@@ -6,10 +6,10 @@ from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
 
-class RestaurantMenuEntry(models.Model):
+class RestaurantMenuEntry(PolymorphicModel):
 
-    class Meta:
-        abstract = True
+    # class Meta:
+    #     abstract = True
 
     name = models.CharField(max_length=200,
                             validators=[MinLengthValidator(limit_value=2,
@@ -18,7 +18,6 @@ class RestaurantMenuEntry(models.Model):
                                 decimal_places=2,
                                 validators=[MinValueValidator(limit_value=0.0,
                                                               message='Price cannot be negative.')])
-    objects = models.Manager()
 
     def __str__(self):
         return self.name

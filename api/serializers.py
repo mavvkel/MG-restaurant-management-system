@@ -12,10 +12,10 @@ class tempCustomerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class RestaurantMenuEntrySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = RestaurantMenuEntry
-#         fields = ('id', 'name', 'price')
+class RestaurantMenuEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantMenuEntry
+        fields = ('id', 'name', 'price')
 
 
 class DishRestaurantMenuEntrySerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class DrinkRestaurantMenuEntrySerializer(serializers.ModelSerializer):
 
 class RestaurantMenuEntryPolymorphicSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
-        # RestaurantMenuEntry: RestaurantMenuEntrySerializer,
+        RestaurantMenuEntry: RestaurantMenuEntrySerializer,
         DishRestaurantMenuEntry: DishRestaurantMenuEntrySerializer,
         DrinkRestaurantMenuEntry: DrinkRestaurantMenuEntrySerializer
     }
