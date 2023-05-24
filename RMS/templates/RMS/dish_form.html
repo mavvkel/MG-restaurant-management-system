@@ -9,7 +9,7 @@
 
         <h1>Order Form</h1>
 
-        <form method="POST" action="{% url 'menu' %}">
+        <form method="POST" action="{% url 'dish-form' %}">
             {% csrf_token %}
 
             <label for="name">Name:</label>
