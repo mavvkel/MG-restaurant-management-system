@@ -1,8 +1,9 @@
 from django.db import models
 from django.apps import apps
+from polymorphic.models import PolymorphicModel
 
 
-class MenuSelection(models.Model):
+class MenuSelection(PolymorphicModel):
     order = models.ForeignKey('RMS.RestaurantOrder', on_delete=models.CASCADE)
     menu_entry = models.ForeignKey('RMS.RestaurantMenuEntry', on_delete=models.CASCADE)
     # order = apps.get_model('RMS.RestaurantOrder')
