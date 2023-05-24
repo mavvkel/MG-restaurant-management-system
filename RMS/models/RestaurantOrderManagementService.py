@@ -7,8 +7,7 @@ from django.db import models
 
 class RestaurantOrderManagementService(models.Model):
 
-    def __init__(self, restaurant, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, restaurant):
         self._restaurant = restaurant
         self._orders = []
         self._tables = models.ForeignKey(RestaurantOrder, on_delete=models.CASCADE)
@@ -34,7 +33,7 @@ class RestaurantOrderManagementService(models.Model):
                 delivery_orders.append(order)
         return delivery_orders
 
-    # def find_booked_tables(self, time_start, time_end):
+    def find_booked_tables(self, time_start, time_end):
 
     # TO DO: def find_available_tables(self, time_start, time_end, properties):
 

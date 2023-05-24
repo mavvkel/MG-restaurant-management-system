@@ -26,15 +26,15 @@ def addItem(request):
 
 # TODO: TokenAuthentication should have the keyword set to 'bearer'
 class RestaurantMenuEntryListView(generics.ListCreateAPIView):
-    authentication_classes = []
-    permission_classes = []
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = DishRestaurantMenuEntrySerializer
     queryset = DishRestaurantMenuEntry.objects.all()
 
 
 # TODO: status 409
 class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = []
-    permission_classes = []
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = DishRestaurantMenuEntrySerializer
     queryset = DishRestaurantMenuEntry.objects.all()

@@ -1,8 +1,9 @@
 import RestaurantTableBooking
 import RestaurantOrder
+from django.db import models
 
 
 class StationaryRestaurantOrder(RestaurantOrder):
-    tableBooking = RestaurantTableBooking
-    customerComments = str
+    tableBooking = models.ForeignKey(RestaurantTableBooking, on_delete=models.CASCADE)
+    customerComments = models.CharField(max_length=500)
 
