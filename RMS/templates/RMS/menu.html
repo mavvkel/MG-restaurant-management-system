@@ -3,9 +3,14 @@
 
     <div>
         <div>
+            <a class="button" href="{% url 'start' %}">
+                <button>Back to start</button>
+            </a>
+        </div>
+        <div>
 
-            <label>Dish Menu:</label>
-            <a href="{% url 'dish_form' %}"><button>Add Dish</button></a>
+            <h2>Dish Menu:</h2>
+            <a href="{% url 'dish-form' %}"><button>Add new dish</button></a>
 
             <h3>Starter</h3>
             {% for item in category1 %}
@@ -34,7 +39,7 @@
 
         </div>
         <div>
-            <label>Drink Menu:</label>
+            <h2>Drink Menu:</h2>
         </div>
     </div>
 
