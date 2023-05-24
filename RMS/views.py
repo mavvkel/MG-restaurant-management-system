@@ -12,6 +12,10 @@ def orders_view(request):
     return render(request, 'RMS/orders.html')
 
 
+def tables_view(request):
+    return render(request, 'RMS/table_booking.html')
+
+
 def add_order_view(request):
     response = requests.get('http://localhost:8000/api/restaurant/menu')
     data = response.json()
@@ -39,8 +43,7 @@ def menu_view(request):
             return redirect('menu')
 
         else:
-            error_message = "An error occurred while submitting the form."
-            return render(request, 'RMS/menu.html', {'error_message': error_message})
+            return redirect('dish-form')
     else:
         response = requests.get('http://localhost:8000/api/restaurant/menu')
         data = response.json()

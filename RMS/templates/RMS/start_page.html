@@ -3,24 +3,24 @@
 <div>
     <div>
         <a class="button" href="{% url 'orders' %}">
-            <h1>Show Orders</h1>
+            <button><h2>Show Orders</h2></button>
         </a>
     </div>
-
-
-
     <div>
         <a class="button" href="{% url 'add-order' %}">
-            <h1>Add New Order</h1>
+            <button><h2>Add New Order</h2></button>
         </a>
     </div>
-
-    <button>Table Booking</button>
     <div>
-        <a href="{% url 'menu' %}"><button>Menu</button></a>
+        <a class="button" href="{% url 'tables' %}">
+            <button><h2>Table Booking</h2></button>
+        </a>
     </div>
-
-
+    <div>
+        <a class="button" href="{% url 'menu' %}">
+            <button><h2>Menu</h2></button>
+        </a>
+    </div>
 </div>
 
 {% endblock content %}
