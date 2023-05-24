@@ -14,6 +14,8 @@ from RMS.models.Restaurant import Restaurant
 from RMS.models.RestaurantTable import RestaurantTable
 from RMS.models.DeliveryRestaurantOrder import DeliveryRestaurantOrder
 from RMS.models.StationaryRestaurantOrder import StationaryRestaurantOrder
+from RMS.models.WeekDay import WeekDay
+from RMS.models.StartEndHours import StartEndHours
 
 
 # @api_view(['GET'])
@@ -107,3 +109,24 @@ class StationaryRestaurantDetailOrderView(generics.RetrieveUpdateDestroyAPIView)
     permission_classes = []
     serializer_class = StationaryRestaurantOrderSerializer
     queryset = StationaryRestaurantOrder.objects.all()
+
+
+class StationaryRestaurantAvailabilityOrderView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantAvailabilitySerializer
+    queryset = RestaurantAvailability.objects.all()
+
+
+class StartEndHoursView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = StartEndHoursSerializer
+    queryset = StartEndHours.objects.all()
+
+
+class WeekDayView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = WeekDaySerializer
+    queryset = WeekDay

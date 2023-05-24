@@ -1,10 +1,16 @@
+from abc import ABC
+
 from rest_framework import serializers
+
+from RMS.models import StartEndHours
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from CMS.models import tempCustomer
 from RMS.models.RestaurantWorker import RestaurantWorker
 from RMS.models.Restaurant import Restaurant
 from RMS.models.DeliveryRestaurantOrder import DeliveryRestaurantOrder
 from RMS.models.StationaryRestaurantOrder import StationaryRestaurantOrder
+from RMS.models.RestaurantAvailability import RestaurantAvailability
+from RMS.models.WeekDay import WeekDay
 
 
 class tempCustomerSerializer(serializers.ModelSerializer):
@@ -48,3 +54,43 @@ class StationaryRestaurantOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = StationaryRestaurantOrder
         fields = ('tableBooking', 'customerComments', 'date', 'menu_selection')
+
+
+class RestaurantAvailabilityListSerializer(serializers.ListSerializer, ABC):
+    def update(self, instance, validated_data):
+        weekday_mapping = {element.id: element for element in instance}
+        startend_hours_mapping = {item['id']: item for item in validated_data}
+
+        ret = []
+        for weekday_id, data in startend_hours_mapping.items():
+            weekday = weekday_mapping.get(weekday_id, None)
+            if weekday is None:
+                ret.append(self.child.create(data))
+            else:
+                ret.append(self.child.update(weekday, data))
+
+        # Perform deletions.
+        for weekday_id, weekday in weekday_mapping.items():
+            if weekday_id not in startend_hours_mapping:
+                weekday.delete()
+
+        return ret
+
+
+class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        list_serializer_class = RestaurantAvailabilityListSerializer
+        # model = RestaurantAvailability
+        # fields = '__all__'
+
+
+class StartEndHoursSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StartEndHours
+        fields = ('start_time', 'end_time')
+
+
+class WeekDaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeekDay
+        fields = '__all__'

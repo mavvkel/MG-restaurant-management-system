@@ -17,8 +17,8 @@ class RestaurantAvailability(models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def toJson(self):
-        return json.dumps(self._schedule, default=str)
+    # def toJson(self):
+    #     return json.dumps(self._schedule, default=str)
 
     def get_schedule(self):
         return self._schedule

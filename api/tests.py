@@ -116,7 +116,7 @@ class RestaurantWorkerListViewTests(TestCase):
             {
                 'name': 'Steve',
                 'role': 'Manager',
-                'availability': restaurantAvailability.toJson()
+                'availability': restaurantAvailability
             }
         request = self.factory.post(url, body, format='json')
         force_authenticate(request, user=self.test_user1)
