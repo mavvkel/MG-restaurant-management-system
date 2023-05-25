@@ -22,63 +22,105 @@ def add_order_view(request):
     return render(request, 'RMS/add_order.html', {'data': data})
 
 
-
 def menu_view(request):
     response = requests.get('http://localhost:8000/api/restaurant/menu')
     data = response.json()
 
-    category1 = []  # Starter
-    category2 = []  # Main course
-    category3 = []  # Soup
-    category4 = []  # Salad
-    category5 = []  # Dessert
+    dish_category_starter = []  # Starter
+    dish_category_main_course = []  # Main course
+    dish_category_soup = []  # Soup
+    dish_category_salad = []  # Salad
+    dish_category_dessert = []  # Dessert
+
+    drink_category_alcoholic = []
+    drink_category_non_alcoholic = []
 
     for item in data:
-        stage = item['stage']
-        if stage == DishRestaurantMenuEntry.DishStage.STARTER:
-            category1.append(item)
-        elif stage == DishRestaurantMenuEntry.DishStage.MAIN_COURSE:
-            category2.append(item)
-        elif stage == DishRestaurantMenuEntry.DishStage.SOUP:
-            category3.append(item)
-        elif stage == DishRestaurantMenuEntry.DishStage.SALAD:
-            category4.append(item)
-        elif stage == DishRestaurantMenuEntry.DishStage.DESSERT:
-            category5.append(item)
+        resourcetype = item['resourcetype']
+        if resourcetype == 'DishRestaurantMenuEntry':
+            stage = item['stage']
+            if stage == 1:
+                dish_category_starter.append(item)
+            elif stage == 2:
+                dish_category_main_course.append(item)
+            elif stage == 3:
+                dish_category_soup.append(item)
+            elif stage == 4:
+                dish_category_salad.append(item)
+            elif stage == 5:
+                dish_category_dessert.append(item)
+        elif resourcetype == 'DrinkRestaurantMenuEntry':
+            contains_alcohol = item.get('contains_alcohol', False)
+            if contains_alcohol:
+                drink_category_alcoholic.append(item)
+            else:
+                drink_category_non_alcoholic.append(item)
 
     return render(request, 'RMS/menu.html', {
-        'category1': category1,
-        'category2': category2,
-        'category3': category3,
-        'category4': category4,
-        'category5': category5
+        'dish_category_starter': dish_category_starter,
+        'dish_category_main_course': dish_category_main_course,
+        'dish_category_soup': dish_category_soup,
+        'dish_category_salad': dish_category_salad,
+        'dish_category_dessert': dish_category_dessert,
+        'drink_category_alcoholic': drink_category_alcoholic,
+        'drink_category_non_alcoholic': drink_category_non_alcoholic
     })
+
+
 
 
 def dish_form_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         price = request.POST.get('price')
-        stage = request.POST.get('stage')
+        stage = int(request.POST.get('stage'))
         weight = request.POST.get('weight')
 
         payload = {
             'name': name,
             'price': price,
-            'stage': stage,
-            'weight': weight
+            'resourcetype': 'DishRestaurantMenuEntry'
         }
 
-        response = requests.post('http://localhost:8000/api/restaurant/menu', data=payload)
+        if stage in [1, 2, 3, 4, 5]:
+            payload['stage'] = stage
+            payload['weight'] = weight
+
+        response = requests.post('http://localhost:8000/api/restaurant/menu', json=payload)
 
         if response.status_code == 201:
             return redirect('menu')
-
         else:
-
             return redirect('dish-form')
     else:
         return render(request, 'RMS/dish_form.html')
+
+
+def drink_form_view(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        contains_alcohol = bool(request.POST.get('contains_alcohol'))
+        volume = request.POST.get('volume')
+
+        payload = {
+            'name': name,
+            'price': price,
+            'contains_alcohol': contains_alcohol,
+            'volume': volume,
+            'resourcetype': 'DrinkRestaurantMenuEntry'
+        }
+
+        response = requests.post('http://localhost:8000/api/restaurant/menu', json=payload)
+
+        if response.status_code == 201:
+            return redirect('menu')
+        else:
+            return redirect('drink-form')
+    else:
+        return render(request, 'RMS/drink_form.html')
+
+
 
 
 

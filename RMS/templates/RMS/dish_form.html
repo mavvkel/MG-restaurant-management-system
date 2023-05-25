@@ -7,7 +7,7 @@
             </a>
         </div>
 
-        <h1>Order Form</h1>
+        <h1>Dish Form</h1>
 
         <form method="POST" action="{% url 'dish-form' %}">
             {% csrf_token %}
@@ -19,12 +19,20 @@
             <input type="text" id="price" name="price" required>
 
             <label for="stage">Stage:</label>
-            <input type="text" id="stage" name="stage" required>
+            <select id="stage" name="stage" required>
+                <option value="">Select a stage</option>
+                <option value="1">Starter</option>
+                <option value="2">Main course</option>
+                <option value="3">Soup</option>
+                <option value="4">Salad</option>
+                <option value="5">Dessert</option>
+            </select>
 
             <label for="weight">Weight:</label>
             <input type="text" id="weight" name="weight" required>
 
             <input type="submit" value="Submit">
         </form>
+
     </div>
 {% endblock content %}
