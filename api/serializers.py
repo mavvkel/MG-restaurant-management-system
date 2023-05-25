@@ -1,8 +1,9 @@
 from abc import ABC
 
 from rest_framework import serializers
+from django.utils import timezone
 
-from RMS.models import StartEndHours
+from RMS.models.StartEndHours import StartEndHours
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from CMS.models import tempCustomer
 from RMS.models.RestaurantWorker import RestaurantWorker
@@ -56,7 +57,7 @@ class StationaryRestaurantOrderSerializer(serializers.ModelSerializer):
         fields = ('tableBooking', 'customerComments', 'date', 'menu_selection')
 
 
-class RestaurantAvailabilityListSerializer(serializers.ListSerializer, ABC):
+class RestaurantAvailabilityListSerializer(serializers.ListSerializer):
     def update(self, instance, validated_data):
         weekday_mapping = {element.id: element for element in instance}
         startend_hours_mapping = {item['id']: item for item in validated_data}
@@ -77,14 +78,9 @@ class RestaurantAvailabilityListSerializer(serializers.ListSerializer, ABC):
         return ret
 
 
-class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        list_serializer_class = RestaurantAvailabilityListSerializer
-        # model = RestaurantAvailability
-        # fields = '__all__'
-
-
 class StartEndHoursSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField(format="%H:%M:%S")
+    end_time = serializers.DateTimeField(format="%H:%M:%S")
     class Meta:
         model = StartEndHours
         fields = ('start_time', 'end_time')
@@ -93,4 +89,13 @@ class StartEndHoursSerializer(serializers.ModelSerializer):
 class WeekDaySerializer(serializers.ModelSerializer):
     class Meta:
         model = WeekDay
+        fields = '__all__'
+
+
+class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
+    schedule = serializers.DictField()
+
+    class Meta:
+        # list_serializer_class = RestaurantAvailabilityListSerializer
+        model = RestaurantAvailability
         fields = '__all__'

@@ -12,20 +12,20 @@ def default(obj):
 
 
 class RestaurantAvailability(models.Model):
-    _schedule = {}
+    schedule = models.JSONField(default={})
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    # def toJson(self):
-    #     return json.dumps(self._schedule, default=str)
+    def toJson(self):
+        return json.dumps(self.schedule)
 
-    def get_schedule(self):
-        return self._schedule
+    # def get_schedule(self):
+    #     return self.schedule
 
     def add_or_update_day(self, week_day, start_end_hours):
-        self._schedule[week_day] = start_end_hours
+        self.schedule[week_day] = start_end_hours
 
     def remove_day(self, week_day):
-        if week_day in self._schedule:
-            del self._schedule[week_day]
+        if week_day in self.schedule:
+            del self.schedule[week_day]

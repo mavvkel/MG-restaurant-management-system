@@ -111,7 +111,7 @@ class StationaryRestaurantDetailOrderView(generics.RetrieveUpdateDestroyAPIView)
     queryset = StationaryRestaurantOrder.objects.all()
 
 
-class StationaryRestaurantAvailabilityOrderView(generics.RetrieveUpdateDestroyAPIView):
+class RestaurantAvailabilityView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = []
     permission_classes = []
     serializer_class = RestaurantAvailabilitySerializer

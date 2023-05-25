@@ -76,13 +76,15 @@ class RestaurantWorkerListViewTests(TestCase):
         self.assertEqual(RestaurantWorker.objects.all().exists(), False)
         restaurantAvailability = RestaurantAvailability.objects.create()
 
+        start_time_str = '2011-11-04T00:05:23+04:00'
+        end_time_str = '2011-11-04T00:06:23+04:00'
+
+        start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%S%z')
+        end_time = datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M:%S%z')
+
         restaurantAvailability.add_or_update_day(WeekDay.MONDAY,
-                                                 StartEndHours.objects.create(start_time=
-                                                                              datetime.fromisoformat(
-                                                                                  '2011-11-04T00:05:23+04:00'),
-                                                                              end_time=
-                                                                              datetime.fromisoformat(
-                                                                                  '2011-11-04T00:06:23+04:00')))
+                                                 StartEndHours.objects.create(start_time=start_time,
+                                                                          end_time=end_time))
         self.test_worker1 = RestaurantWorker.objects.create(name='Eggs Benedict',
                                                             role=RestaurantWorker.RestaurantWorkerRole.CHEF,
                                                             availability=restaurantAvailability)
