@@ -121,6 +121,15 @@ def drink_form_view(request):
         return render(request, 'RMS/drink_form.html')
 
 
+def workers_view(request):
+    response = requests.get('http://localhost:8000/api/restaurant/menu')
+    data = response.json()
+    workers = []
+    workers = data
+
+    return render(request, 'RMS/menu.html', {
+        'workers': workers
+    })
 
 
 
