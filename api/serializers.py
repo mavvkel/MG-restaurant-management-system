@@ -81,9 +81,16 @@ class RestaurantAvailabilityListSerializer(serializers.ListSerializer):
 class StartEndHoursSerializer(serializers.ModelSerializer):
     start_time = serializers.DateTimeField(format="%H:%M:%S")
     end_time = serializers.DateTimeField(format="%H:%M:%S")
+
     class Meta:
         model = StartEndHours
-        fields = ('start_time', 'end_time')
+        fields = ['start_time', 'end_time']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['start_time'] = instance.start_time.strftime("%H:%M:%S")
+        representation['end_time'] = instance.end_time.strftime("%H:%M:%S")
+        return representation
 
 
 class WeekDaySerializer(serializers.ModelSerializer):
