@@ -1,0 +1,70 @@
+[
+    {
+        "model":"RMS.RestaurantMenuEntry",
+        "pk":1,
+        "fields":{
+            "name": "Eggs Benedict",
+            "price": "29.99",
+            "polymorphic_ctype_id":9
+        }
+    },
+    {
+        "model":"RMS.RestaurantMenuEntry",
+        "pk":2,
+        "fields":{
+            "name": "Toast with ham",
+            "price": "9.99",
+            "polymorphic_ctype_id":9
+        }
+    },
+    {
+        "model":"RMS.RestaurantMenuEntry",
+        "pk":3,
+        "fields":{
+            "name": "Coca Cola",
+            "price": "2.99",
+            "polymorphic_ctype_id":10
+        }
+    },
+    {
+        "model":"RMS.RestaurantMenuEntry",
+        "pk":4,
+        "fields":{
+            "name": "Heineken",
+            "price": "5.40",
+            "polymorphic_ctype_id":10
+        }
+    },
+    {
+        "model":"RMS.DishRestaurantMenuEntry",
+        "pk":1,
+        "fields":{
+            "stage": 2,
+            "weight": "0.300"
+        }
+    },
+    {
+        "model":"RMS.DishRestaurantMenuEntry",
+        "pk":2,
+        "fields":{
+            "stage": 1,
+            "weight": "0.100"
+        }
+    },
+    {
+        "model":"RMS.DrinkRestaurantMenuEntry",
+        "pk":3,
+        "fields":{
+            "contains_alcohol": false,
+            "volume": "0.3300"
+        }
+    },
+    {
+        "model":"RMS.DrinkRestaurantMenuEntry",
+        "pk":4,
+        "fields":{
+            "contains_alcohol": true,
+            "volume": "0.5000"
+        }
+    }
+]
