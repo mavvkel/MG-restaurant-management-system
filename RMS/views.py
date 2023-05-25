@@ -122,12 +122,13 @@ def drink_form_view(request):
 
 
 def workers_view(request):
-    response = requests.get('http://localhost:8000/api/restaurant/menu')
+    # this will not work b/c of the need for authentication
+    response = requests.get('https://rms.restaurant.pool.kot.tools/api/restaurant/worker')
     data = response.json()
     workers = []
     workers = data
 
-    return render(request, 'RMS/menu.html', {
+    return render(request, 'RMS/workers.html', {
         'workers': workers
     })
 

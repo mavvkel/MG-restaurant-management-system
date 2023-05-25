@@ -8,10 +8,9 @@
             </a>
         </div>
         <div>
-            <h2>Dish Menu:</h2>
+            <h2>Workers:</h2>
 
-            <h3>Starter</h3>
-            {% for item in dish_category_starter %}
+            {% for item in workers %}
                 <li>{{ item.name }} - <b>{{ item.price }}</b></li>
             {% endfor %}
         </div>
