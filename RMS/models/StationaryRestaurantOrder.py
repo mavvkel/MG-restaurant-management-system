@@ -10,4 +10,3 @@ class StationaryRestaurantOrder(RestaurantOrder):
     @staticmethod
     def get_type():
         return 'stationary'
-
