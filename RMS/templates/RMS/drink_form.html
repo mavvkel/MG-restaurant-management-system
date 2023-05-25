@@ -1,0 +1,31 @@
+{% extends 'RMS/main.html' %}
+{% block content %}
+    <div>
+        <div>
+            <a class="button" href="{% url 'start' %}">
+                <button>Back to start</button>
+            </a>
+        </div>
+
+        <h1>Drink Form</h1>
+
+        <form method="POST" action="{% url 'drink-form' %}">
+            {% csrf_token %}
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" required>
+
+            <label for="contains_alcohol">Contains Alcohol:</label>
+            <input type="checkbox" id="contains_alcohol" name="contains_alcohol">
+
+            <label for="volume">Volume:</label>
+            <input type="text" id="volume" name="volume" required>
+
+            <input type="submit" value="Submit">
+        </form>
+
+    </div>
+{% endblock content %}
