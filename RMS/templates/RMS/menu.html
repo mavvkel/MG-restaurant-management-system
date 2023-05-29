@@ -1,0 +1,56 @@
+{% extends 'RMS/main.html' %}
+{% block content %}
+
+    <div>
+        <div>
+            <a class="button" href="{% url 'start' %}">
+                <button>Back to start</button>
+            </a>
+        </div>
+        <div>
+            <h2>Dish Menu:</h2>
+            <a href="{% url 'dish-form' %}"><button>Add new dish</button></a>
+
+            <h3>Starter</h3>
+            {% for item in dish_category_starter %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Main course</h3>
+            {% for item in dish_category_main_course %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Soup</h3>
+            {% for item in dish_category_soup %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Salad</h3>
+            {% for item in dish_category_salad %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Dessert</h3>
+            {% for item in dish_category_dessert %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2>Drink Menu:</h2>
+            <a href="{% url 'drink-form' %}"><button>Add new drink</button></a>
+            <h3>Alcoholic Drinks</h3>
+            {% for item in drink_category_alcoholic %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+
+            <h3>Non-Alcoholic Drinks</h3>
+            {% for item in drink_category_non_alcoholic %}
+                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock content %}
