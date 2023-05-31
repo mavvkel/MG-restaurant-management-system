@@ -2,6 +2,7 @@ from rest_framework import serializers
 from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
+from RMS.models.RestaurantTable import RestaurantTable
 from CMS.models import tempCustomer
 from rest_polymorphic.serializers import PolymorphicSerializer
 
@@ -36,3 +37,9 @@ class RestaurantMenuEntryPolymorphicSerializer(PolymorphicSerializer):
         DishRestaurantMenuEntry: DishRestaurantMenuEntrySerializer,
         DrinkRestaurantMenuEntry: DrinkRestaurantMenuEntrySerializer
     }
+
+
+class RestaurantTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantTable
+        fields = ('id', 'capacity', 'properties')
