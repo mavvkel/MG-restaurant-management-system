@@ -11,8 +11,37 @@ def start_view(request):
 def orders_view(request):
     return render(request, 'RMS/orders.html')
 
+
 def tables_view(request):
-    return render(request, 'RMS/table_booking.html')
+    response = requests.get('http://localhost:8000/api/restaurant/table')
+    table_data = response.json()
+
+    table_category_window = []
+    table_category_kitchen = []
+    table_category_garden = []
+    table_category_bar = []
+    table_category_isolated = []
+
+    for item in table_data:
+        properties = item['properties']
+        if properties == 1:
+            table_category_window.append(item)
+        elif properties == 2:
+            table_category_kitchen.append(item)
+        elif properties == 3:
+            table_category_garden.append(item)
+        elif properties == 4:
+            table_category_bar.append(item)
+        elif properties == 5:
+            table_category_isolated.append(item)
+
+    return render(request, 'RMS/table_booking.html', {
+        'table_category_window': table_category_window,
+        'table_category_kitchen': table_category_kitchen,
+        'table_category_garden': table_category_garden,
+        'table_category_bar': table_category_bar,
+        'table_category_isolated': table_category_isolated
+    })
 
 
 def add_order_view(request):
@@ -94,6 +123,28 @@ def dish_form_view(request):
             return redirect('dish-form')
     else:
         return render(request, 'RMS/dish_form.html')
+
+
+def table_form_view(request):
+    if request.method == 'POST':
+        capacity = request.POST.get('capacity')
+        properties = int(request.POST.get('properties'))
+
+        payload = {
+            'capacity': capacity,
+        }
+
+        if properties in [1, 2, 3, 4, 5]:
+            payload['properties'] = properties
+
+        response = requests.post('http://localhost:8000/api/restaurant/table', json=payload)
+
+        if response.status_code == 201:
+            return redirect('tables')
+        else:
+            return redirect('table-form')
+    else:
+        return render(request, 'RMS/table_form.html')
 
 
 def drink_form_view(request):

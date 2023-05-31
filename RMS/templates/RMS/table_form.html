@@ -1,0 +1,31 @@
+{% extends 'RMS/main.html' %}
+{% block content %}
+    <div>
+        <div>
+            <a class="button" href="{% url 'start' %}">
+                <button>Back to start</button>
+            </a>
+        </div>
+
+        <h1>Table Form</h1>
+
+        <form method="POST" action="{% url 'table-form' %}">
+            {% csrf_token %}
+            <label for="capacity">Capacity:</label>
+            <input type="text" id="capacity" name="capacity" required>
+
+            <label for="properties">Properties:</label>
+            <select id="properties" name="properties" required>
+                <option value="">Select properties</option>
+                <option value="1">Near window</option>
+                <option value="2">Near kitchen</option>
+                <option value="3">In garden</option>
+                <option value="4">In bar</option>
+                <option value="5">Is isolated</option>
+            </select>
+
+            <input type="submit" value="Submit">
+        </form>
+
+    </div>
+{% endblock content %}
