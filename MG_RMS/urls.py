@@ -20,7 +20,8 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
@@ -30,3 +31,4 @@ urlpatterns = [
     path('api/jwt-token/', TokenObtainPairView.as_view(), name='jwt-token_obtain_pair'),
     path('api/jwt-token/refresh/', TokenRefreshView.as_view(), name='jwt-token_refresh'),
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
