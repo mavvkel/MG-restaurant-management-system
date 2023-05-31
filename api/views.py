@@ -40,16 +40,10 @@ class RestaurantMenuEntryListView(generics.ListCreateAPIView):
     queryset = RestaurantMenuEntry.objects.all()
 
 
+
 # TODO: status 409
 class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BearerAuthentication]
     permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = DishRestaurantMenuEntrySerializer
     queryset = DishRestaurantMenuEntry.objects.all()
-
-
-class RestaurantTableListView(generics.ListCreateAPIView):
-    authentication_classes = []
-    permission_classes = []
-    serializer_class = RestaurantTableSerializer
-    queryset = RestaurantTable.objects.all()
