@@ -14,6 +14,18 @@ class tempCustomerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantAvailability
+        fields = 'schedule'
+
+
+class RestaurantWorkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantWorker
+        fields = ('id', 'name', 'role', 'availability')
+
+
 class RestaurantMenuEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = RestaurantMenuEntry

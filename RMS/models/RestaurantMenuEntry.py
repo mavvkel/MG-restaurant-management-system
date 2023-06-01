@@ -7,10 +7,6 @@ from polymorphic.models import PolymorphicModel
 
 
 class RestaurantMenuEntry(PolymorphicModel):
-
-    # class Meta:
-    #     abstract = True
-
     name = models.CharField(max_length=200,
                             validators=[MinLengthValidator(limit_value=2,
                                                            message='Name must be at least 2 characters long.')])
