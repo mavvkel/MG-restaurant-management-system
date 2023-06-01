@@ -1,11 +1,12 @@
-import datetime
+from django.db import models
 
 
-class StartEndHours:
-    _start_time = datetime
-    _end_time = datetime
+class StartEndHours(models.Model):
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
-    def __init__(self, start_time, end_time):
+    def __init__(self, start_time, end_time, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         if start_time >= end_time:
             raise ValueError("Start time must be before end time")
         self._start_time = start_time
@@ -18,6 +19,7 @@ class StartEndHours:
         if start_time >= self._end_time:
             raise ValueError("Start time must be before end time")
         self._start_time = start_time
+        self.save()
 
     def get_end_time(self):
         return self._end_time
@@ -26,6 +28,7 @@ class StartEndHours:
         if end_time <= self._start_time:
             raise ValueError("End time must be after start time")
         self._end_time = end_time
+        self.save()
 
     def contains_date(self, dt):
         return self._start_time <= dt <= self._end_time
