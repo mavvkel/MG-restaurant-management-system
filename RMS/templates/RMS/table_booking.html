@@ -1,5 +1,14 @@
 {% extends 'RMS/main.html' %}
+{% load static %}
 {% block content %}
+
+<style>
+    .category-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+</style>
 
 <div>
     <div>
@@ -9,9 +18,71 @@
     </div>
     <div>
         <h2>Tables:</h2>
+        <a href="{% url 'table-form' %}"><button>Add new table</button></a>
+    </div>
+
+    <div class="category-container">
+        <div>
+            <h3>Near window</h3>
+            {% for item in table_category_window %}
+                <div>
+                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
+                    <div style="text-align: center;">
+                        <b>{{ item.capacity }}</b>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3>Near kitchen</h3>
+            {% for item in table_category_kitchen %}
+                <div>
+                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
+                    <div style="text-align: center;">
+                        <b>{{ item.capacity }}</b>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3>In garden</h3>
+            {% for item in table_category_garden %}
+                <div>
+                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
+                    <div style="text-align: center;">
+                        <b>{{ item.capacity }}</b>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3>In bar</h3>
+            {% for item in table_category_bar %}
+                <div>
+                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
+                    <div style="text-align: center;">
+                        <b>{{ item.capacity }}</b>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3>Isolated</h3>
+            {% for item in table_category_isolated %}
+                <div>
+                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
+                    <div style="text-align: center;">
+                        <b>{{ item.capacity }}</b>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
 </div>
-
 
 {% endblock content %}
