@@ -3,6 +3,7 @@ from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
 from RMS.models.RestaurantTable import RestaurantTable
+from RMS.models.RestaurantWorker import *
 from CMS.models import tempCustomer
 from rest_polymorphic.serializers import PolymorphicSerializer
 
