@@ -12,6 +12,7 @@ class RestaurantTable(models.Model):
         IN_BAR = 4, _('In bar')
         IS_ISOLATED = 5, _('Is isolated')
 
+    # TODO: this should be a combination of those choices
     properties = models.IntegerField(choices=RestaurantTableProperty.choices)
     capacity = models.PositiveSmallIntegerField(null=False)
 
