@@ -11,6 +11,7 @@ from RMS.models import RestaurantMenuEntry
 from .serializers import *
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
+from RMS.models.RestaurantTable import RestaurantTableProperty
 from rest_framework.authentication import TokenAuthentication
 from itertools import chain
 
@@ -53,3 +54,10 @@ class RestaurantTableListView(generics.ListCreateAPIView):
     permission_classes = []
     serializer_class = RestaurantTableSerializer
     queryset = RestaurantTable.objects.all()
+
+
+class RestaurantTablePropertyView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantTablePropertySerializer
+    queryset = RestaurantTableProperty.objects.all()

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
-from RMS.models.RestaurantTable import RestaurantTable
+from RMS.models.RestaurantTable import RestaurantTable, RestaurantTableProperty
 from CMS.models import tempCustomer
 from rest_polymorphic.serializers import PolymorphicSerializer
 
@@ -39,7 +39,29 @@ class RestaurantMenuEntryPolymorphicSerializer(PolymorphicSerializer):
     }
 
 
+class RestaurantTablePropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantTableProperty
+        fields = ('property',)
+
+
 class RestaurantTableSerializer(serializers.ModelSerializer):
+    properties = RestaurantTablePropertySerializer(many=True)
+
     class Meta:
         model = RestaurantTable
         fields = ('id', 'capacity', 'properties')
+
+    def create(self, validated_data):
+        properties_data = validated_data.pop('properties', [])
+        restaurant_table = RestaurantTable.objects.create(**validated_data)
+
+        properties = []
+        for property_data in properties_data:
+            property = RestaurantTableProperty.objects.filter(property=property_data['property']).first()
+            if property is not None:
+                properties.append(property)
+
+        restaurant_table.properties.set(properties)
+
+        return restaurant_table

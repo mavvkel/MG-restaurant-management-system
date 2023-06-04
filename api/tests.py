@@ -111,11 +111,12 @@ class RestaurantTableListViewTests(APITestCase):
     def setUp(self) -> None:
         RestaurantMenuEntry.objects.all().delete()
         self.assertEqual(DishRestaurantMenuEntry.objects.all().exists(), False)
-        self.smallTable = RestaurantTable.objects.create(capacity=int(4),
-                                                         properties=RestaurantTable.RestaurantTableProperty.NEAR_WINDOW)
-        self.bigTable = RestaurantTable.objects.create(capacity=int(12),
-                                                       properties=RestaurantTable.RestaurantTableProperty.IN_BAR)
+        self.smallTable = RestaurantTable.objects.create(capacity=int(4))
+        self.smallTable.add_property(RestaurantTableProperty.objects.create(property=1))
 
+        self.bigTable = RestaurantTable.objects.create(capacity=int(12))
+        self.bigTable.add_property(RestaurantTableProperty.objects.create(property=4))
+        self.smallTable.add_property(RestaurantTableProperty.objects.create(property=4))
         self.test_user1 = User.objects.create(username='test_user1')
         self.test_user1.set_password('123')
         self.test_user1.save()
@@ -129,11 +130,11 @@ class RestaurantTableListViewTests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 2)
         self.assertContains(response=response,
-                            text='"capacity":4,"properties":1',
+                            text='"capacity":4,"properties":[{"property":1},{"property":4}]',
                             count=1,
                             status_code=200)
         self.assertContains(response=response,
-                            text='"capacity":12,"properties":4',
+                            text='"capacity":12,"properties":[{"property":4}]',
                             count=1,
                             status_code=200)
 
@@ -145,22 +146,21 @@ class RestaurantTableListViewTests(APITestCase):
         data = \
             {
                 'capacity': '2',
-                'properties': f'{RestaurantTable.RestaurantTableProperty.IN_BAR}'
+                'properties': [{'property': 4}]
             }
 
         previous_count = RestaurantTable.objects.count()
         response = self.client.post(url, data, format='json')
         # force_authenticate(request, user=self.test_user1)
         self.assertContains(response=response,
-                            text='"capacity":2,"properties":4',
+                            text='"capacity":2,"properties":[{"property":4}]',
                             count=1,
                             status_code=201)
         self.assertEqual(RestaurantTable.objects.count(), previous_count + 1)
-        self.assertTrue(RestaurantTable.objects.filter(capacity=2, properties=RestaurantTable.RestaurantTableProperty.
-                                                       IN_BAR).exists())
+        self.assertTrue(RestaurantTable.objects.filter(capacity=2, properties__property=4).exists())
 
         response = self.client.get(url, format='json')
         self.assertContains(response=response,
-                            text='"properties":4',
+                            text='"properties":[{"property":4}]',
                             count=2,
                             status_code=200)
