@@ -21,67 +21,29 @@
         <a href="{% url 'table-form' %}"><button>Add new table</button></a>
     </div>
 
-    <div class="category-container">
-        <div>
-            <h3>Near window</h3>
-            {% for item in table_category_window %}
-                <div>
-                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
-                    <div style="text-align: center;">
-                        <b>{{ item.capacity }}</b>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3>Near kitchen</h3>
-            {% for item in table_category_kitchen %}
-                <div>
-                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
-                    <div style="text-align: center;">
-                        <b>{{ item.capacity }}</b>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3>In garden</h3>
-            {% for item in table_category_garden %}
-                <div>
-                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
-                    <div style="text-align: center;">
-                        <b>{{ item.capacity }}</b>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3>In bar</h3>
-            {% for item in table_category_bar %}
-                <div>
-                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
-                    <div style="text-align: center;">
-                        <b>{{ item.capacity }}</b>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3>Isolated</h3>
-            {% for item in table_category_isolated %}
-                <div>
-                    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
-                    <div style="text-align: center;">
-                        <b>{{ item.capacity }}</b>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+    {% for table in table_data %}
+  <div class="table">
+    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
+    <div class="table-info">
+      <h3>Capacity: {{ table.capacity }}</h3>
+      <p>
+        {% for property in table.properties %}
+          {% if property.property == 1 %}
+            Near Window
+          {% elif property.property == 2 %}
+            Near Kitchen
+          {% elif property.property == 3 %}
+            In Garden
+          {% elif property.property == 4 %}
+            In Bar
+          {% elif property.property == 5 %}
+            Isolated
+          {% endif %}
+        {% endfor %}
+      </p>
     </div>
+  </div>
+{% endfor %}
 
 </div>
 
