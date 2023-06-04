@@ -110,7 +110,7 @@ class RestaurantMenuEntryListViewTests(APITestCase):
 
 class RestaurantTableListViewTests(APITestCase):
     def setUp(self) -> None:
-        RestaurantTableProperty.objects.all().delete()
+        RestaurantTable.objects.all().delete()  # Update this line
         self.assertEqual(DishRestaurantMenuEntry.objects.all().exists(), False)
         self.smallTable = RestaurantTable.objects.create(capacity=4)
         self.smallTable.properties.add(RestaurantTableProperty.objects.create(property=1))
@@ -145,7 +145,7 @@ class RestaurantTableListViewTests(APITestCase):
         """
         url = reverse('api:restaurant_table_list')
         data = {
-            'capacity': '2',
+            'capacity': 2,  # Update this line
             'properties': [{'property': 4}]
         }
 
@@ -161,3 +161,5 @@ class RestaurantTableListViewTests(APITestCase):
                             text='"properties":[{"property":4}]',
                             count=2,
                             status_code=200)
+
+
