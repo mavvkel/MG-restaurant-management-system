@@ -11,4 +11,6 @@ urlpatterns = [
     # TODO: this v should return 403 for wrong credentials
     path('restaurant/table', views.RestaurantTableListView.as_view(), name='restaurant_table_list'),
     path('restaurant/worker/login', rf_views.obtain_auth_token, name='worker_login'),
+    path('restaurant-orders/', views.RestaurantOrderView.as_view(), name='restaurant-order-list'),
+    path('restaurant-orders/<int:pk>/', views.RestaurantOrderDetailView.as_view(), name='restaurant-order-detail'),
 ]

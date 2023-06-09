@@ -52,4 +52,29 @@ class RestaurantTableListView(generics.ListCreateAPIView):
     authentication_classes = []
     permission_classes = []
     serializer_class = RestaurantTableSerializer
+<<<<<<< Updated upstream
     queryset = RestaurantTable.objects.all()
+=======
+    queryset = RestaurantTable.objects.all()
+
+
+class RestaurantTablePropertyView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantTablePropertySerializer
+    queryset = RestaurantTableProperty.objects.all()
+
+class RestaurantOrderView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantOrderSerializer
+    queryset = RestaurantOrder.objects.all()
+
+
+class RestaurantOrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantOrderSerializer
+    queryset = RestaurantOrder.objects.all()
+
+>>>>>>> Stashed changes
