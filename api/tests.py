@@ -7,7 +7,11 @@ from RMS.models.DishRestaurantMenuEntry import *
 from RMS.models.DrinkRestaurantMenuEntry import *
 from RMS.models.RestaurantMenuEntry import *
 from RMS.models.RestaurantTable import *
+from RMS.models.RestaurantTableBooking import RestaurantTableBooking
+from RMS.models.StartEndHours import StartEndHours
 from api.views import RestaurantMenuEntryListView, RestaurantMenuEntryDetailView
+
+from datetime import date, datetime
 
 
 class RestaurantMenuEntryListViewTests(APITestCase):
@@ -110,8 +114,8 @@ class RestaurantMenuEntryListViewTests(APITestCase):
 
 class RestaurantTableListViewTests(APITestCase):
     def setUp(self) -> None:
-        RestaurantTable.objects.all().delete()  # Update this line
-        self.assertEqual(DishRestaurantMenuEntry.objects.all().exists(), False)
+        RestaurantTable.objects.all().delete()
+        self.assertEqual(RestaurantTable.objects.all().exists(), False)
         self.smallTable = RestaurantTable.objects.create(capacity=4)
         self.smallTable.properties.add(RestaurantTableProperty.objects.create(property=1))
 
@@ -163,3 +167,59 @@ class RestaurantTableListViewTests(APITestCase):
                             status_code=200)
 
 
+class RestaurantTableBookingViewTests(APITestCase):
+    def setUp(self) -> None:
+        RestaurantTable.objects.all().delete()
+        RestaurantTableBooking.objects.all().delete()
+
+        smallTable = RestaurantTable.objects.create(capacity=4)
+        smallTable.properties.add(RestaurantTableProperty.objects.create(property=1))
+
+        start_time_temp = datetime.fromisoformat('2011-11-04T00:05:23+04:00')
+        end_time_temp = datetime.fromisoformat('2011-11-04T00:06:23+04:00')
+        startEndHoursTemp = StartEndHours.objects.create(start_time=start_time_temp, end_time=end_time_temp)
+
+        self.assertEqual(RestaurantTableBooking.objects.all().exists(), False)
+        self.booking_test = RestaurantTableBooking.objects.create(table=smallTable,
+                                                                  date=datetime.now(),
+                                                                  startEndHours=startEndHoursTemp)
+
+        self.test_user1 = User.objects.create(username='test_user1')
+        self.test_user1.set_password('123')
+        self.test_user1.save()
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_get_RestaurantTable_list(self):
+        """
+        Ensure unauthenticated GET method on /api/restaurant/menu endpoint is working.
+        """
+        url = reverse('api:restaurant_table_booking')
+        response = self.client.get(url, format='json')
+        self.assertEqual(len(response.data), 1)
+        self.assertContains(response=response,
+                            text='"capacity":4,"properties":[{"property":1},{"property":4}]',
+                            count=1,
+                            status_code=200)
+
+    def test_post_Table_to_RestaurantTable_list(self):
+        """
+        Ensure unauthenticated POST method with DishRestaurantMenuEntry on /api/restaurant/menu endpoint is working.
+        """
+        url = reverse('api:restaurant_table_list')
+        data = {
+            'capacity': 2,  # Update this line
+            'properties': [{'property': 4}]
+        }
+
+        previous_count = RestaurantTable.objects.count()
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(RestaurantTable.objects.count(), previous_count + 1)
+        self.assertTrue(RestaurantTable.objects.filter(capacity=2, properties__property=4).exists())
+
+        response = self.client.get(url, format='json')
+        self.assertContains(response=response,
+                            text='"properties":[{"property":4}]',
+                            count=2,
+                            status_code=200)

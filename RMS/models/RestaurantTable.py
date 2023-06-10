@@ -1,7 +1,5 @@
-from typing import List
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-# from .RestaurantTableProperty import RestaurantTableProperty
 
 
 class RestaurantTableProperty(models.Model):
@@ -24,8 +22,6 @@ class RestaurantTableProperty(models.Model):
 
 
 class RestaurantTable(models.Model):
-
-    # TODO: this should be a combination of those choices
     properties = models.ManyToManyField(RestaurantTableProperty, verbose_name="list of properties")
     capacity = models.PositiveSmallIntegerField(null=False)
 
