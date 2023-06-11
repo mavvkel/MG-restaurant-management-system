@@ -1,37 +1,59 @@
 {% extends 'RMS/main.html' %}
+{% load static %}
 {% block content %}
-    <div>
-        <div>
-            <a class="button" href="{% url 'start' %}">
-                <button>Back to start</button>
-            </a>
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'tables' %}">
+                    <button class="btn-primary">Back</button>
+                </a>
         </div>
 
-        <h1>Table Form</h1>
+        <div class="form-wrapper">
+            <h1>Table Form</h1>
 
-        <form method="POST" action="{% url 'table-form' %}">
-            {% csrf_token %}
-            <label for="capacity">Capacity:</label>
-            <input type="text" id="capacity" name="capacity" required>
+            <form method="POST" action="{% url 'table-form' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="capacity">Capacity:</label>
+                    <input type="text" id="capacity" name="capacity" required class="form-input">
+                </div>
 
-             <label>Properties:</label><br>
-          <input type="checkbox" id="property1" name="properties" value="1">
-          <label for="property1">Near Window</label><br>
+                <div class="form-group">
+                    <label>Properties:</label><br>
+                    <div class="property-checkbox">
+                        <input type="checkbox" id="property1" name="properties" value="1">
+                        <label for="property1">Near Window</label>
+                    </div>
 
-          <input type="checkbox" id="property2" name="properties" value="2">
-          <label for="property2">Near kitchen</label><br>
+                    <div class="property-checkbox">
+                        <input type="checkbox" id="property2" name="properties" value="2">
+                        <label for="property2">Near Kitchen</label>
+                    </div>
 
-          <input type="checkbox" id="property3" name="properties" value="3">
-          <label for="property3">In garden</label><br>
+                    <div class="property-checkbox">
+                        <input type="checkbox" id="property3" name="properties" value="3">
+                        <label for="property3">In Garden</label>
+                    </div>
 
-          <input type="checkbox" id="property4" name="properties" value="4">
-          <label for="property4">In bar</label><br>
+                    <div class="property-checkbox">
+                        <input type="checkbox" id="property4" name="properties" value="4">
+                        <label for="property4">In Bar</label>
+                    </div>
 
-          <input type="checkbox" id="property5" name="properties" value="5">
-          <label for="property5">Is isolated</label><br>
+                    <div class="property-checkbox">
+                        <input type="checkbox" id="property5" name="properties" value="5">
+                        <label for="property5">Isolated</label>
+                    </div>
+                </div>
 
-            <input type="submit" value="Submit">
-        </form>
-
+                <div class="submit-button">
+                    <input type="submit" value="Submit" class="form-submit">
+                </div>
+            </form>
+        </div>
     </div>
+    <link rel="stylesheet" href="{% static 'RMS/css/table_form_css.css' %}">
+
 {% endblock content %}
+
+

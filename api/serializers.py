@@ -58,7 +58,7 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
 
         properties = []
         for property_data in properties_data:
-            property = RestaurantTableProperty.objects.filter(property=property_data['property']).first()
+            property = RestaurantTableProperty.objects.create(property=property_data['property'])
             if property is not None:
                 properties.append(property)
 
