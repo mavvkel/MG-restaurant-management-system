@@ -162,4 +162,3 @@ class RestaurantTableListViewTests(APITestCase):
                             count=2,
                             status_code=200)
 
-

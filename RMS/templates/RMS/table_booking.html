@@ -8,41 +8,107 @@
         justify-content: space-between;
         margin-bottom: 20px;
     }
+
+    .button {
+        margin-bottom: 10px;
+    }
+
+    .table {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .table img {
+        max-width: 50%;
+        height: auto;
+        object-fit: contain;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .table img:hover {
+        transform: scale(1.1);
+    }
+
+    .table-info h3 {
+        margin-bottom: 5px;
+    }
+
+    .table-info p {
+        margin: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
 </style>
 
-<div>
+<div class="container">
+    <div class="header">
+        <h1>Table Management</h1>
+    </div>
+
     <div>
         <a class="button" href="{% url 'start' %}">
-            <button>Back to start</button>
+            <button class="btn-primary">Back to Start</button>
         </a>
     </div>
     <div>
         <h2>Tables:</h2>
-        <a href="{% url 'table-form' %}"><button>Add new table</button></a>
+        <a href="{% url 'table-form' %}">
+            <button class="btn-primary">Add New Table</button>
+        </a>
     </div>
 
     {% for table in table_data %}
-  <div class="table">
-    <img src="{% static 'RMS/images/restaurant_table_image.jpg' %}" alt="Table Image" style="width: 100px; height: 100px;">
-    <div class="table-info">
-      <h3>Capacity: {{ table.capacity }}</h3>
-      <p>
+    <div class="table">
+        {% if table.capacity <= 6 %}
+             <img src="{% static 'RMS/images/table_' %}{{ table.capacity }}_chairs.png" alt="Table Image">
+        {% else %}
+             <img src="{% static 'RMS/images/table_many_chairs.png' %}" alt="Table Image">
+        {% endif %}
+        <div class="table-info">
+    <h3>Capacity: {{ table.capacity }}</h3>
+    <p>
         {% for property in table.properties %}
-          {% if property.property == 1 %}
-            Near Window
-          {% elif property.property == 2 %}
-            Near Kitchen
-          {% elif property.property == 3 %}
-            In Garden
-          {% elif property.property == 4 %}
-            In Bar
-          {% elif property.property == 5 %}
-            Isolated
-          {% endif %}
+            {% if property.property == 1 %}
+                <i class="fa fa-window-maximize"></i> Near Window
+            {% elif property.property == 2 %}
+                <i class="fa fa-cutlery"></i> Near Kitchen
+            {% elif property.property == 3 %}
+                <i class="fa fa-tree"></i> In Garden
+            {% elif property.property == 4 %}
+                <i class="fa fa-glass"></i> In Bar
+            {% elif property.property == 5 %}
+                <i class="fa fa-shield"></i> Isolated
+            {% endif %}
         {% endfor %}
-      </p>
+    </p>
+</div>
+
     </div>
-  </div>
 {% endfor %}
 
 </div>
