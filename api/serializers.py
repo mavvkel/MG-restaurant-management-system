@@ -77,4 +77,4 @@ class RestaurantTableBookingSerializer(serializers.ModelSerializer):
 class StartEndHoursSerializer(serializers.ModelSerializer):
     class Meta:
         model = StartEndHours
-        fields = ('start_time', 'end_time')
+        fields = '__all__'

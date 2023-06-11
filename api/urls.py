@@ -12,5 +12,6 @@ urlpatterns = [
     path('restaurant/table', views.RestaurantTableListView.as_view(), name='restaurant_table_list'),
     path('restaurant/table/booking', views.RestaurantTableBookingView.as_view(), name='restaurant_table_booking'),
     path('restaurant/table/property', views.RestaurantTablePropertyView.as_view(), name='restaurant_table_property'),
+    path('restaurant/startend/hours', views.StartEndHoursView.as_view(), name='start_end_hours'),
     path('restaurant/worker/login', rf_views.obtain_auth_token, name='worker_login'),
 ]
