@@ -3,6 +3,7 @@ from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
 from RMS.models.RestaurantTable import RestaurantTable, RestaurantTableProperty
+from RMS.models.RestaurantWorker import *
 from CMS.models import tempCustomer
 from rest_polymorphic.serializers import PolymorphicSerializer
 
@@ -11,6 +12,18 @@ class tempCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = tempCustomer
         fields = '__all__'
+
+
+class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantAvailability
+        fields = 'schedule'
+
+
+class RestaurantWorkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantWorker
+        fields = ('id', 'name', 'role', 'availability')
 
 
 class RestaurantMenuEntrySerializer(serializers.ModelSerializer):
