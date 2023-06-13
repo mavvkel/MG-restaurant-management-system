@@ -6,6 +6,8 @@ app_name = 'api'
 
 urlpatterns = [
     path('', views.getData),
+    path('restaurant/worker/login', rf_views.obtain_auth_token, name='worker_login'),
+    path('restaurant/worker', views.CurrentRestaurantWorkerView.as_view(), name='worker_list'),
     path('restaurant/menu', views.RestaurantMenuEntryListView.as_view(), name='menu_entry_list'),
     path('restaurant/menu/<int:pk>', views.RestaurantMenuEntryDetailView.as_view(), name='menu_entry_detail'),
     # TODO: this v should return 403 for wrong credentials
@@ -13,5 +15,4 @@ urlpatterns = [
     path('restaurant/table/booking', views.RestaurantTableBookingView.as_view(), name='restaurant_table_booking'),
     path('restaurant/table/property', views.RestaurantTablePropertyView.as_view(), name='restaurant_table_property'),
     path('restaurant/startend/hours', views.StartEndHoursView.as_view(), name='start_end_hours'),
-    path('restaurant/worker/login', rf_views.obtain_auth_token, name='worker_login'),
 ]

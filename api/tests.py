@@ -9,6 +9,7 @@ from RMS.models.RestaurantMenuEntry import *
 from RMS.models.RestaurantTable import *
 from RMS.models.RestaurantTableBooking import RestaurantTableBooking
 from RMS.models.StartEndHours import StartEndHours
+from api.serializers import RestaurantTableBookingSerializer
 from api.views import RestaurantMenuEntryListView, RestaurantMenuEntryDetailView
 
 from datetime import date, datetime
@@ -170,50 +171,47 @@ class RestaurantTableListViewTests(APITestCase):
 class StartEndHoursViewTests(APITestCase):
     def setUp(self) -> None:
         StartEndHours.objects.all().delete()
-        start_time_temp = datetime.fromisoformat('2011-11-04T00:05:23+04:00')
-        end_time_temp = datetime.fromisoformat('2011-11-04T00:06:23+04:00')
-        startEndHoursTemp = StartEndHours.objects.create(start_time=start_time_temp, end_time=end_time_temp)
+        self.startEndHoursTemp = StartEndHours.objects.create(start_time=datetime.fromisoformat(
+                                                                '2011-11-04T00:05:23+04:00').time(),
+                                                              end_time=datetime.fromisoformat(
+                                                                  '2011-11-04T00:06:23+04:00').time())
 
         self.test_user1 = User.objects.create(username='test_user1')
         self.test_user1.set_password('123')
         self.test_user1.save()
+        self.assertEqual(StartEndHours.objects.count(), 1)
         self.assertEqual(User.objects.count(), 1)
 
-    def test_get_RestaurantTable_list(self):
-        """
-
-        """
+    def test_get_StartEndHours(self):
         url = reverse('api:start_end_hours')
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 1)
         self.assertContains(response=response,
-                            text='"table":{"capacity":4,"properties":[{"property":4}]}',
+                            text='"start_time":"00:05:23","end_time":"00:06:23"',
                             count=1,
                             status_code=200)
 
-        #
-
-    def test_post_Table_to_RestaurantTable_list(self):
-        """
-        Ensure unauthenticated POST method with DishRestaurantMenuEntry on /api/restaurant/menu endpoint is working.
-        """
-        url = reverse('api:restaurant_table_list')
+    def test_post_StartEndHours(self):
+        url = reverse('api:start_end_hours')
         data = {
-            'startEndHours': '',
-            'table': {'capacity': 2, "properties": [{"property": 5}]}
+            'start_time': '10:02:23',
+            'end_time': '19:02:23'
         }
 
-        previous_count = RestaurantTable.objects.count()
+        previous_count = StartEndHours.objects.count()
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(RestaurantTable.objects.count(), previous_count + 1)
-        self.assertTrue(RestaurantTable.objects.filter(capacity=2, properties__property=4).exists())
+        self.assertEqual(StartEndHours.objects.count(), previous_count + 1)
+        self.assertTrue(StartEndHours.objects.filter(start_time=datetime.fromisoformat(
+                                                                '2011-11-04T10:02:23+04:00').time()
+                                                     , end_time=datetime.fromisoformat(
+                                                                '2011-11-04T19:02:23+04:00').time()).exists())
 
         response = self.client.get(url, format='json')
         self.assertContains(response=response,
-                            text='"properties":[{"property":4}]',
-                            count=2,
+                            text='"start_time":"10:02:23","end_time":"19:02:23"',
+                            count=1,
                             status_code=200)
 
 
@@ -222,56 +220,58 @@ class RestaurantTableBookingViewTests(APITestCase):
         RestaurantTable.objects.all().delete()
         RestaurantTableBooking.objects.all().delete()
 
-        smallTable = RestaurantTable.objects.create(capacity=4)
-        smallTable.properties.add(RestaurantTableProperty.objects.create(property=4))
+        self.smallTable = RestaurantTable.objects.create(capacity=4)
+        self.smallTable.properties.add(RestaurantTableProperty.objects.create(property=4))
 
-        start_time_temp = datetime.fromisoformat('2011-11-04T00:05:23+04:00')
-        end_time_temp = datetime.fromisoformat('2011-11-04T00:06:23+04:00')
-        startEndHoursTemp = StartEndHours.objects.create(start_time=start_time_temp, end_time=end_time_temp)
+        start_time_temp = datetime.fromisoformat('2011-11-04T00:05:23+04:00').time()
+        end_time_temp = datetime.fromisoformat('2011-11-04T00:06:23+04:00').time()
+        self.startEndHoursTemp = StartEndHours.objects.create(start_time=start_time_temp, end_time=end_time_temp)
 
         self.assertEqual(RestaurantTableBooking.objects.all().exists(), False)
-        self.booking_test = RestaurantTableBooking.objects.create(table=smallTable,
+        self.booking_test = RestaurantTableBooking.objects.create(table=self.smallTable,
                                                                   date=datetime.now(),
-                                                                  startEndHours=startEndHoursTemp)
+                                                                  startEndHours=self.startEndHoursTemp)
 
         self.test_user1 = User.objects.create(username='test_user1')
         self.test_user1.set_password('123')
         self.test_user1.save()
         self.assertEqual(User.objects.count(), 1)
 
-    def test_get_RestaurantTable_list(self):
+    def test_get_RestaurantTable_booking(self):
         """
 
         """
-        url = reverse('api:start_end_hours')
+        url = reverse('api:restaurant_table_booking')
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 1)
         self.assertContains(response=response,
-                            text='"table":{"capacity":4,"properties":[{"property":4}]}',
+                            text='"table":{"id":1,"capacity":4,"properties":[{"property":4}]},"startEndHours":'
+                                 '{"start_time":"00:05:23","end_time":"00:06:23"},"date":"2023-06-13"}]',
                             count=1,
                             status_code=200)
 
-        #
-
-    def test_post_Table_to_RestaurantTable_list(self):
+    def test_post_RestaurantTableBooking(self):
         """
         Ensure unauthenticated POST method with DishRestaurantMenuEntry on /api/restaurant/menu endpoint is working.
         """
-        url = reverse('api:restaurant_table_list')
+        url = reverse('api:restaurant_table_booking')
         data = {
-            'startEndHours': '',
-            'table': {'capacity': 2, "properties": [{"property": 5}]}
+            'startEndHours': {"start_time": "20:05:23", "end_time": "21:06:23"},
+            'table': {'capacity': 2, "properties": [{"property": 5}, {"property": 1}]},
+            'date': "2023-06-13"
         }
 
-        previous_count = RestaurantTable.objects.count()
+        previous_count = RestaurantTableBooking.objects.count()
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(RestaurantTable.objects.count(), previous_count + 1)
-        self.assertTrue(RestaurantTable.objects.filter(capacity=2, properties__property=4).exists())
+        self.assertEqual(RestaurantTableBooking.objects.count(), previous_count + 1)
 
         response = self.client.get(url, format='json')
         self.assertContains(response=response,
-                            text='"properties":[{"property":4}]',
-                            count=2,
+                            text='"table":{"id":2,"capacity":2,"properties":[{"property":5},{"property":1}]},"startEndHours":'
+                                 '{"start_time":"20:05:23","end_time":"21:06:23"},"date":"2023-06-13"}]',
+                            count=1,
                             status_code=200)
+        # {"id":2,"table":{"id":2,"capacity":2,"properties":[{"property":5},{"property":1}]},
+        # "startEndHours":{"start_time":"20:05:23","end_time":"21:06:23"},"date":"2023-06-13"}]'

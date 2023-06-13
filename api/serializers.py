@@ -5,14 +5,27 @@ from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
 from RMS.models.RestaurantTable import RestaurantTable, RestaurantTableProperty
 from RMS.models.RestaurantTableBooking import RestaurantTableBooking
 from RMS.models.StartEndHours import StartEndHours
+from RMS.models.RestaurantWorker import RestaurantWorker, RestaurantAvailability
 from CMS.models import tempCustomer
 from rest_polymorphic.serializers import PolymorphicSerializer
-
+from datetime import datetime
 
 class tempCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = tempCustomer
         fields = '__all__'
+
+
+class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantAvailability
+        fields = 'schedule'
+
+
+class RestaurantWorkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantWorker
+        fields = ('id', 'name', 'role', 'availability')
 
 
 class RestaurantMenuEntrySerializer(serializers.ModelSerializer):
@@ -60,7 +73,7 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
 
         properties = []
         for property_data in properties_data:
-            property = RestaurantTableProperty.objects.filter(property=property_data['property']).first()
+            property = RestaurantTableProperty.objects.create(property=property_data['property'])
             if property is not None:
                 properties.append(property)
 
@@ -68,13 +81,40 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         return restaurant_table
 
 
-class RestaurantTableBookingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RestaurantTableBooking
-        fields = '__all__'
-
-
 class StartEndHoursSerializer(serializers.ModelSerializer):
+    start_time = serializers.TimeField(format='%H:%M:%S')
+    end_time = serializers.TimeField(format='%H:%M:%S')
+
     class Meta:
         model = StartEndHours
-        fields = '__all__'
+        fields = ('start_time', 'end_time')
+
+
+class RestaurantTableBookingSerializer(serializers.ModelSerializer):
+    startEndHours = StartEndHoursSerializer()
+    table = RestaurantTableSerializer()
+    date = serializers.DateTimeField(format='%Y-%m-%d')
+
+    class Meta:
+        model = RestaurantTableBooking
+        fields = ('id', 'table', 'startEndHours', 'date')
+
+    def create(self, validated_data):
+        start_end_hours_data = validated_data.pop('startEndHours')
+        table_data = validated_data.pop('table')
+        table_properties = table_data['properties']
+
+        # Create or retrieve the related objects
+        start_end_hours = StartEndHours.objects.create(**start_end_hours_data)
+        table = RestaurantTable.objects.create(capacity=table_data['capacity'])
+        for property_data in table_properties:
+            table.properties.add(RestaurantTableProperty.objects.create(property=property_data['property']))
+
+        # Create the RestaurantTableBooking object
+        booking = RestaurantTableBooking.objects.create(
+            startEndHours=start_end_hours,
+            table=table,
+            **validated_data
+        )
+
+        return booking
