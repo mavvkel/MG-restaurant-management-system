@@ -167,7 +167,6 @@ class RestaurantTableListViewTests(APITestCase):
                             count=2,
                             status_code=200)
 
-
 class StartEndHoursViewTests(APITestCase):
     def setUp(self) -> None:
         StartEndHours.objects.all().delete()
@@ -273,5 +272,3 @@ class RestaurantTableBookingViewTests(APITestCase):
                                  '{"start_time":"20:05:23","end_time":"21:06:23"},"date":"2023-06-13"}]',
                             count=1,
                             status_code=200)
-        # {"id":2,"table":{"id":2,"capacity":2,"properties":[{"property":5},{"property":1}]},
-        # "startEndHours":{"start_time":"20:05:23","end_time":"21:06:23"},"date":"2023-06-13"}]'

@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
 class RestaurantTableProperty(models.Model):
     NEAR_WINDOW = 1, _('Near window')
     NEAR_KITCHEN = 2, _('Near kitchen')
