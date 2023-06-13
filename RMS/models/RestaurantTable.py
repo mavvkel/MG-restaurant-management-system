@@ -5,32 +5,16 @@ from .RestaurantTableProperty import RestaurantTableProperty
 
 
 class RestaurantTable(models.Model):
-    class RestaurantTableProperty(models.IntegerChoices):
-        NEAR_WINDOW = 1, _('Near window')
-        NEAR_KITCHEN = 2, _('Near kitchen')
-        IN_GARDEN = 3, _('In garden')
-        IN_BAR = 4, _('In bar')
-        IS_ISOLATED = 5, _('Is isolated')
 
-    properties = models.IntegerField(choices=RestaurantTableProperty.choices)
+    # TODO: this should be a combination of those choices
+    properties = models.ManyToManyField(RestaurantTableProperty, verbose_name="list of properties")
     capacity = models.PositiveSmallIntegerField(null=False)
 
     def __str__(self):
-        if self.properties == 1:
-            return f'Near window {self.capacity}'
-        elif self.properties == 2:
-            return f'Near kitchen {self.capacity}'
-        elif self.properties == 3:
-            return f'In garden {self.capacity}'
-        elif self.properties == 4:
-            return f'In bar {self.capacity}'
-        elif self.properties == 5:
-            return f'Is isolated {self.capacity}'
-        else:
-            return f'None {self.capacity}'
+        return f'{self.properties.all()} {self.capacity}'
 
     def add_property(self, table_property: RestaurantTableProperty) -> None:
-        self.properties.append(table_property)
+        self.properties.add(table_property)
 
     def remove_property(self, table_property: RestaurantTableProperty) -> None:
         self.properties.remove(table_property)

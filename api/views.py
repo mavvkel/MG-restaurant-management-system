@@ -11,6 +11,7 @@ from RMS.models import RestaurantMenuEntry
 from .serializers import *
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
+from RMS.models.RestaurantWorker import *
 from rest_framework.authentication import TokenAuthentication
 from itertools import chain
 
@@ -33,6 +34,13 @@ def addItem(request):
     return Response(serializer.data)
 
 
+class CurrentRestaurantWorkerView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantWorkerSerializer
+    queryset = RestaurantWorker.objects.filter(id=1)
+
+
 class RestaurantMenuEntryListView(generics.ListCreateAPIView):
     authentication_classes = []
     permission_classes = []
@@ -43,18 +51,15 @@ class RestaurantMenuEntryListView(generics.ListCreateAPIView):
 # TODO: status 409
 class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BearerAuthentication]
-    permission_classes = [IsAuthenticated, DjangoModelPermissions]
-    serializer_class = DishRestaurantMenuEntrySerializer
-    queryset = DishRestaurantMenuEntry.objects.all()
+    permission_classes = []
+    serializer_class = RestaurantMenuEntryPolymorphicSerializer
+    queryset = RestaurantMenuEntry.objects.all()
 
 
 class RestaurantTableListView(generics.ListCreateAPIView):
     authentication_classes = []
     permission_classes = []
     serializer_class = RestaurantTableSerializer
-<<<<<<< Updated upstream
-    queryset = RestaurantTable.objects.all()
-=======
     queryset = RestaurantTable.objects.all()
 
 
@@ -63,6 +68,7 @@ class RestaurantTablePropertyView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = []
     serializer_class = RestaurantTablePropertySerializer
     queryset = RestaurantTableProperty.objects.all()
+
 
 class RestaurantOrderView(generics.ListCreateAPIView):
     authentication_classes = []
@@ -76,5 +82,3 @@ class RestaurantOrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = []
     serializer_class = RestaurantOrderSerializer
     queryset = RestaurantOrder.objects.all()
-
->>>>>>> Stashed changes
