@@ -3,10 +3,12 @@ from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
 from RMS.models.RestaurantTable import RestaurantTable, RestaurantTableProperty
-from RMS.models.RestaurantWorker import *
+from RMS.models.RestaurantTableBooking import RestaurantTableBooking
+from RMS.models.StartEndHours import StartEndHours
+from RMS.models.RestaurantWorker import RestaurantWorker, RestaurantAvailability
 from CMS.models import tempCustomer
 from rest_polymorphic.serializers import PolymorphicSerializer
-
+from datetime import datetime
 
 class tempCustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -78,3 +80,40 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         restaurant_table.properties.set(properties)
         return restaurant_table
 
+class StartEndHoursSerializer(serializers.ModelSerializer):
+    start_time = serializers.TimeField(format='%H:%M:%S')
+    end_time = serializers.TimeField(format='%H:%M:%S')
+
+    class Meta:
+        model = StartEndHours
+        fields = ('start_time', 'end_time')
+
+
+class RestaurantTableBookingSerializer(serializers.ModelSerializer):
+    startEndHours = StartEndHoursSerializer()
+    table = RestaurantTableSerializer()
+    date = serializers.DateTimeField(format='%Y-%m-%d')
+
+    class Meta:
+        model = RestaurantTableBooking
+        fields = ('id', 'table', 'startEndHours', 'date')
+
+    def create(self, validated_data):
+        start_end_hours_data = validated_data.pop('startEndHours')
+        table_data = validated_data.pop('table')
+        table_properties = table_data['properties']
+
+        # Create or retrieve the related objects
+        start_end_hours = StartEndHours.objects.create(**start_end_hours_data)
+        table = RestaurantTable.objects.create(capacity=table_data['capacity'])
+        for property_data in table_properties:
+            table.properties.add(RestaurantTableProperty.objects.create(property=property_data['property']))
+
+        # Create the RestaurantTableBooking object
+        booking = RestaurantTableBooking.objects.create(
+            startEndHours=start_end_hours,
+            table=table,
+            **validated_data
+        )
+
+        return booking

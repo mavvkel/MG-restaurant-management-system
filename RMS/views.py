@@ -81,13 +81,6 @@ def tables_view(request):
 
     return render(request, 'RMS/table_booking.html', {'filtered_tables': filtered_tables, 'capacity': capacity, 'selected_properties': properties})
 
-
-
-
-
-
-
-
 def dish_form_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')

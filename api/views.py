@@ -68,3 +68,17 @@ class RestaurantTablePropertyView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = []
     serializer_class = RestaurantTablePropertySerializer
     queryset = RestaurantTableProperty.objects.all()
+
+
+class RestaurantTableBookingView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RestaurantTableBookingSerializer
+    queryset = RestaurantTableBooking.objects.all()
+
+
+class StartEndHoursView(generics.ListCreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = StartEndHoursSerializer
+    queryset = StartEndHours.objects.all()
