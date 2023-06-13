@@ -80,7 +80,6 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         restaurant_table.properties.set(properties)
         return restaurant_table
 
-
 class StartEndHoursSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(format='%H:%M:%S')
     end_time = serializers.TimeField(format='%H:%M:%S')

@@ -168,6 +168,7 @@ class RestaurantTableListViewTests(APITestCase):
                             status_code=200)
 
 
+
 class StartEndHoursViewTests(APITestCase):
     def setUp(self) -> None:
         StartEndHours.objects.all().delete()
