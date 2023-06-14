@@ -1,13 +1,12 @@
-from ContactData import ContactData
-from RestaurantMenuEntry import RestaurantMenuEntry
-from typing import Dict
+from .ContactData import ContactData
+from .RestaurantMenuEntry import RestaurantMenuEntry
 from decimal import Decimal
 from django.db import models
 
 
-class RestaurantOrder:
+class RestaurantOrder(models.Model):
     customer_contact_data = models.ForeignKey(ContactData, on_delete=models.CASCADE)
-    menu_selection = models.ManyToManyField(RestaurantMenuEntry, through='MenuSelection')
+    menu_selection = models.ManyToManyField(RestaurantMenuEntry, through='MenuSelection', null=True)
     date = models.DateTimeField()
 
     def add_or_update_menu_entry(self, menu_entry, count):
