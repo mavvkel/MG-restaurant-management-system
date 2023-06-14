@@ -10,12 +10,6 @@
     <div class="content-wrapper">
         <div class="left-section">
             <div>
-                <a class="button" href="{% url 'start' %}">
-                    <button class="btn-primary">Back to Start</button>
-                </a>
-            </div>
-
-            <div>
                 <h2>Filter Tables:</h2>
                 <form action="{% url 'tables' %}" method="get" id="filter-form">
                     <input type="number" name="capacity" placeholder="Enter capacity" value="{{ capacity }}">
