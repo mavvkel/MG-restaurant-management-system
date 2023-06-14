@@ -230,7 +230,7 @@ class RestaurantTableBookingViewTests(APITestCase):
 
         self.assertEqual(RestaurantTableBooking.objects.all().exists(), False)
         self.booking_test = RestaurantTableBooking.objects.create(table=self.smallTable,
-                                                                  date=datetime.now(),
+                                                                  date=date(2023, 6, 13),
                                                                   startEndHours=self.startEndHoursTemp)
 
         self.test_user1 = User.objects.create(username='test_user1')
