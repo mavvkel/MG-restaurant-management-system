@@ -80,6 +80,7 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         restaurant_table.properties.set(properties)
         return restaurant_table
 
+
 class StartEndHoursSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(format='%H:%M:%S')
     end_time = serializers.TimeField(format='%H:%M:%S')
@@ -91,7 +92,6 @@ class StartEndHoursSerializer(serializers.ModelSerializer):
 
 class RestaurantTableBookingSerializer(serializers.ModelSerializer):
     startEndHours = StartEndHoursSerializer()
-    table = RestaurantTableSerializer()
     date = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
@@ -101,18 +101,16 @@ class RestaurantTableBookingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         start_end_hours_data = validated_data.pop('startEndHours')
         table_data = validated_data.pop('table')
-        table_properties = table_data['properties']
-
+        if table_data is None:
+            print("ERROR: COULDN'T FIND THE TABLE")
+            quit()
         # Create or retrieve the related objects
         start_end_hours = StartEndHours.objects.create(**start_end_hours_data)
-        table = RestaurantTable.objects.create(capacity=table_data['capacity'])
-        for property_data in table_properties:
-            table.properties.add(RestaurantTableProperty.objects.create(property=property_data['property']))
 
         # Create the RestaurantTableBooking object
         booking = RestaurantTableBooking.objects.create(
             startEndHours=start_end_hours,
-            table=table,
+            table=table_data,
             **validated_data
         )
 

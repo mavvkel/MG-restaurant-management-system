@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import requests
 import json
 from .models import DishRestaurantMenuEntry
+from datetime import datetime, time
 
 
 def start_view(request):
@@ -67,6 +68,9 @@ def menu_view(request):
 def tables_view(request):
     capacity = request.GET.get('capacity')
     properties = request.GET.getlist('property')
+    start_time = request.GET.get('start_time')
+    end_time = request.GET.get('end_time')
+    date = request.GET.get('date')
 
     response = requests.get('http://localhost:8000/api/restaurant/table')
     table_data = response.json()
@@ -77,9 +81,52 @@ def tables_view(request):
         table_properties = [str(prop['property']) for prop in table['properties']]
         if (not capacity or table['capacity'] == int(capacity)) \
                 and (not properties or any(prop in table_properties for prop in properties)):
-            filtered_tables.append(table)
+            # Check if the table is available during the specified time range on the same date
+            if start_time and end_time and date:
+                bookings = get_table_bookings()
+                overlapping_bookings = [
+                    booking for booking in bookings if
+                    is_booking_overlapping(booking, table['id'], start_time, end_time, date)
+                ]
+                if not overlapping_bookings:
+                    filtered_tables.append(table)
+            else:
+                filtered_tables.append(table)
 
-    return render(request, 'RMS/table_booking.html', {'filtered_tables': filtered_tables, 'capacity': capacity, 'selected_properties': properties})
+    return render(
+        request,
+        'RMS/table_booking.html',
+        {
+            'filtered_tables': filtered_tables,
+            'capacity': capacity,
+            'selected_properties': properties,
+            'start_time': start_time,
+            'end_time': end_time,
+            'date': date,
+        }
+    )
+
+
+def get_table_bookings():
+    response = requests.get('http://localhost:8000/api/restaurant/table/booking')
+    booking_data = response.json()
+    return booking_data
+
+
+def is_booking_overlapping(booking, table_id, start_time, end_time, date):
+    if booking['table'] == table_id and booking['date'] == date:
+        booking_start_time = datetime.strptime(booking['startEndHours']['start_time'], '%H:%M:%S').time()
+        booking_end_time = datetime.strptime(booking['startEndHours']['end_time'], '%H:%M:%S').time()
+        requested_start_time = datetime.strptime(start_time, '%H:%M').time()
+        requested_end_time = datetime.strptime(end_time, '%H:%M').time()
+
+        return (
+                (booking_start_time >= requested_start_time and booking_start_time < requested_end_time) or
+                (booking_end_time > requested_start_time and booking_end_time <= requested_end_time) or
+                (booking_start_time <= requested_start_time and booking_end_time >= requested_end_time)
+        )
+
+    return False
 
 def dish_form_view(request):
     if request.method == 'POST':
@@ -151,6 +198,36 @@ def table_form_view(request):
             return redirect('table-form')
     else:
         return render(request, 'RMS/table_form.html')
+
+
+def booking_form_view(request, table_id):
+
+    if request.method == 'POST':
+        table_id = request.POST.get('table')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        date = request.POST.get('date')
+
+        payload = {
+            'table': table_id,
+            'startEndHours': {
+                'start_time': start_time,
+                'end_time': end_time
+            },
+            'date': date
+        }
+
+        response = requests.post('http://localhost:8000/api/restaurant/table/booking', json=payload)
+
+        if response.status_code == 201:
+            return redirect('tables')
+        else:
+            return redirect('booking-form')
+    else:
+        response = requests.get('http://localhost:8000/api/restaurant/table')
+        table_data = response.json()
+
+        return render(request, 'RMS/booking_form.html', {'tables': table_data, 'selected_table_id': table_id})
 
 
 def workers_view(request):
