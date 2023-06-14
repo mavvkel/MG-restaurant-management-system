@@ -3,135 +3,86 @@
 
 <style>
     .menu-caption {
-        text-align: center;
-        font-size: 24px;
-        margin-top: 20px;
-        margin-bottom: 40px;
+        margin: 2rem 0 4rem;
     }
 
-    .menu-container {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
+    .menu-item {
+        margin-bottom: 1rem;
+        font-size: 1rem;
     }
 
-    .menu-container > div {
-        width: 50%;
-        padding: 0 10px;
-    }
-
-    .menu-container h2 {
-        margin-top: 0;
-    }
-
-    .menu-container h3 {
-        margin-bottom: 10px;
-    }
-
-    .menu-container ul {
-        list-style: none;
-        padding-left: 0;
-    }
-
-    .menu-container ul li {
-        margin-bottom: 5px;
-    }
-
-    .back-button {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-    }
-
-    .button-container a {
-        text-decoration: none;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
+    .menu-item-price {
+        font-weight: 700;
     }
 </style>
 
-    <div class="back-button">
-    <a class="button" href="{% url 'start' %}">
-        <button class="btn-primary">Back to Start</button>
-    </a>
-</div>
-
-<div class="menu-caption">
-    <h1>Menu</h1>
-</div>
-
-<div class="menu-container">
-    <div>
-        <h2>Dish Menu:</h2>
-        <a href="{% url 'dish-form' %}"><button class="btn-primary">Add new dish</button></a>
-
-        <h3>Starter</h3>
-        <ul>
-            {% for item in dish_category_starter %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
-
-        <h3>Main course</h3>
-        <ul>
-            {% for item in dish_category_main_course %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
-
-        <h3>Soup</h3>
-        <ul>
-            {% for item in dish_category_soup %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
-
-        <h3>Salad</h3>
-        <ul>
-            {% for item in dish_category_salad %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
-
-        <h3>Dessert</h3>
-        <ul>
-            {% for item in dish_category_dessert %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center menu-caption">
+            <h1>Menu</h1>
+        </div>
     </div>
 
-    <div>
-        <h2>Drink Menu:</h2>
-        <a href="{% url 'drink-form' %}"><button class="btn-primary">Add new drink</button></a>
-
-        <h3>Alcoholic Drinks</h3>
-        <ul>
-            {% for item in drink_category_alcoholic %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
-
-        <h3>Non-Alcoholic Drinks</h3>
-        <ul>
-            {% for item in drink_category_non_alcoholic %}
-                <li>{{ item.name }} - <b>{{ item.price }}</b></li>
-            {% endfor %}
-        </ul>
-    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center">
+    <h2>Dish Menu:</h2>
+    <a href="{% url 'dish-form' %}" class="btn btn-primary d-flex align-items-center">Add new dish</a>
 </div>
 
+            <h3>Soups:</h3>
+            <ul class="list-unstyled">
+                {% for item in dish_category_soup %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+        <h3>Starters:</h3>
+            <ul class="list-unstyled">
+                {% for item in dish_category_starter %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+        <h3>Main courses:</h3>
+            <ul class="list-unstyled">
+                {% for item in dish_category_main_course %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+        <h3>Salads:</h3>
+            <ul class="list-unstyled">
+                {% for item in dish_category_salad %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+        <h3>Desserts:</h3>
+            <ul class="list-unstyled">
+                {% for item in dish_category_dessert %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+        </div>
 
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Drink Menu:</h2>
+                <a href="{% url 'drink-form' %}" class="btn btn-primary d-flex align-items-center">Add new drink</a>
+            </div>
+
+            <h3>Alcoholic Drinks</h3>
+            <ul class="list-unstyled">
+                {% for item in drink_category_alcoholic %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+        <h3>Alcohol-free Drinks</h3>
+            <ul class="list-unstyled">
+                {% for item in drink_category_non_alcoholic %}
+                    <li class="menu-item">{{ item.name }} - <b class="menu-item-price">{{ item.price }}</b></li>
+                {% endfor %}
+            </ul>
+            <!-- Remaining categories here -->
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
