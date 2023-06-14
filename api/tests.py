@@ -230,7 +230,7 @@ class RestaurantTableBookingViewTests(APITestCase):
 
         self.assertEqual(RestaurantTableBooking.objects.all().exists(), False)
         self.booking_test = RestaurantTableBooking.objects.create(table=self.smallTable,
-                                                                  date=datetime.now(),
+                                                                  date=date(2023, 6, 13),
                                                                   startEndHours=self.startEndHoursTemp)
 
         self.test_user1 = User.objects.create(username='test_user1')
@@ -246,7 +246,7 @@ class RestaurantTableBookingViewTests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 1)
         self.assertContains(response=response,
-                            text='"table":{"id":1,"capacity":4,"properties":[{"property":4}]},"startEndHours":'
+                            text='"table":1,"startEndHours":'
                                  '{"start_time":"00:05:23","end_time":"00:06:23"},"date":"2023-06-13"}]',
                             count=1,
                             status_code=200)
@@ -258,7 +258,7 @@ class RestaurantTableBookingViewTests(APITestCase):
         url = reverse('api:restaurant_table_booking')
         data = {
             'startEndHours': {"start_time": "20:05:23", "end_time": "21:06:23"},
-            'table': {'capacity': 2, "properties": [{"property": 5}, {"property": 1}]},
+            'table': 1,
             'date': "2023-06-13"
         }
 
@@ -270,7 +270,7 @@ class RestaurantTableBookingViewTests(APITestCase):
 
         response = self.client.get(url, format='json')
         self.assertContains(response=response,
-                            text='"table":{"id":2,"capacity":2,"properties":[{"property":5},{"property":1}]},"startEndHours":'
+                            text='"table":1,"startEndHours":'
                                  '{"start_time":"20:05:23","end_time":"21:06:23"},"date":"2023-06-13"}]',
                             count=1,
                             status_code=200)
