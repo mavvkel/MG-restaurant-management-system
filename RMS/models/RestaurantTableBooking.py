@@ -1,9 +1,9 @@
 from django.db import models
-import RestaurantTable
-import StartEndHours
+from RMS.models.RestaurantTable import RestaurantTable
+from RMS.models.StartEndHours import StartEndHours
 
 
 class RestaurantTableBooking(models.Model):
     table = models.ForeignKey(RestaurantTable, on_delete=models.CASCADE)
     date = models.DateTimeField()
-    startEndHours = models.ForeignKey(StartEndHours, on_delete=models.CASCADE)
+    startEndHours = models.ForeignKey(StartEndHours, on_delete=models.CASCADE, null=False)

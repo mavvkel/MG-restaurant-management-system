@@ -1,38 +1,49 @@
 {% extends 'RMS/main.html' %}
+{% load static %}
+
 {% block content %}
-    <div>
-        <div>
-            <a class="button" href="{% url 'start' %}">
-                <button>Back to start</button>
+    <div class="container">
+        <div class="form-wrapper">
+            <a class="back-button button" href="{% url 'menu' %}">
+                <button class="btn-primary">Back</button>
             </a>
+
+            <h1>Dish Form</h1>
+
+            <form method="POST" action="{% url 'dish-form' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="text" id="price" name="price" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="stage">Stage:</label>
+                    <select id="stage" name="stage" class="form-input" required>
+                        <option value="">Select a stage</option>
+                        <option value="1">Starter</option>
+                        <option value="2">Main course</option>
+                        <option value="3">Soup</option>
+                        <option value="4">Salad</option>
+                        <option value="5">Dessert</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight:</label>
+                    <input type="text" id="weight" name="weight" class="form-input" required>
+                </div>
+
+                <input type="submit" value="Submit" class="form-submit">
+            </form>
         </div>
-
-        <h1>Dish Form</h1>
-
-        <form method="POST" action="{% url 'dish-form' %}">
-            {% csrf_token %}
-
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="price">Price:</label>
-            <input type="text" id="price" name="price" required>
-
-            <label for="stage">Stage:</label>
-            <select id="stage" name="stage" required>
-                <option value="">Select a stage</option>
-                <option value="1">Starter</option>
-                <option value="2">Main course</option>
-                <option value="3">Soup</option>
-                <option value="4">Salad</option>
-                <option value="5">Dessert</option>
-            </select>
-
-            <label for="weight">Weight:</label>
-            <input type="text" id="weight" name="weight" required>
-
-            <input type="submit" value="Submit">
-        </form>
-
     </div>
+        <link rel="stylesheet" href="{% static 'RMS/css/table_form_css.css' %}">
+
 {% endblock content %}

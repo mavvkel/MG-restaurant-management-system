@@ -65,11 +65,21 @@ def menu_view(request):
 
 
 def tables_view(request):
+    capacity = request.GET.get('capacity')
+    properties = request.GET.getlist('property')
+
     response = requests.get('http://localhost:8000/api/restaurant/table')
     table_data = response.json()
 
-    return render(request, 'RMS/table_booking.html', {'table_data': table_data})
+    filtered_tables = []
 
+    for table in table_data:
+        table_properties = [str(prop['property']) for prop in table['properties']]
+        if (not capacity or table['capacity'] == int(capacity)) \
+                and (not properties or any(prop in table_properties for prop in properties)):
+            filtered_tables.append(table)
+
+    return render(request, 'RMS/table_booking.html', {'filtered_tables': filtered_tables, 'capacity': capacity, 'selected_properties': properties})
 
 def dish_form_view(request):
     if request.method == 'POST':

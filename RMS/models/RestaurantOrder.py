@@ -1,6 +1,5 @@
-from ContactData import ContactData
-from RestaurantMenuEntry import RestaurantMenuEntry
-from typing import Dict
+from .ContactData import ContactData
+from .RestaurantMenuEntry import RestaurantMenuEntry
 from decimal import Decimal
 from django.db import models
 

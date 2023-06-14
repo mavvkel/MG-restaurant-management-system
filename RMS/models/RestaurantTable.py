@@ -1,31 +1,9 @@
-from typing import List
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-# from .RestaurantTableProperty import RestaurantTableProperty
-
-
-class RestaurantTableProperty(models.Model):
-    NEAR_WINDOW = 1, _('Near window')
-    NEAR_KITCHEN = 2, _('Near kitchen')
-    IN_GARDEN = 3, _('In garden')
-    IN_BAR = 4, _('In bar')
-    IS_ISOLATED = 5, _('Is isolated')
-
-    property = models.IntegerField(choices=(
-        NEAR_WINDOW,
-        NEAR_KITCHEN,
-        IN_GARDEN,
-        IN_BAR,
-        IS_ISOLATED,
-    ))
-
-    def __str__(self):
-        return str(self.property)
+from RMS.models.RestaurantTableProperty import RestaurantTableProperty
 
 
 class RestaurantTable(models.Model):
-
-    # TODO: this should be a combination of those choices
     properties = models.ManyToManyField(RestaurantTableProperty, verbose_name="list of properties")
     capacity = models.PositiveSmallIntegerField(null=False)
 

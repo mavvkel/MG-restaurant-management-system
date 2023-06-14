@@ -1,31 +1,42 @@
 {% extends 'RMS/main.html' %}
+{% load static %}
+
 {% block content %}
-    <div>
-        <div>
-            <a class="button" href="{% url 'start' %}">
-                <button>Back to start</button>
+    <div class="container">
+        <div class="form-wrapper">
+            <a class="back-button button" href="{% url 'menu' %}">
+                <button class="btn-primary">Back</button>
             </a>
+
+            <h1>Drink Form</h1>
+
+            <form method="POST" action="{% url 'drink-form' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="text" id="price" name="price" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contains_alcohol">Contains Alcohol:</label>
+                    <input type="checkbox" id="contains_alcohol" name="contains_alcohol" class="property-checkbox">
+                </div>
+
+                <div class="form-group">
+                    <label for="volume">Volume:</label>
+                    <input type="text" id="volume" name="volume" class="form-input" required>
+                </div>
+
+                <input type="submit" value="Submit" class="form-submit">
+            </form>
         </div>
-
-        <h1>Drink Form</h1>
-
-        <form method="POST" action="{% url 'drink-form' %}">
-            {% csrf_token %}
-
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="price">Price:</label>
-            <input type="text" id="price" name="price" required>
-
-            <label for="contains_alcohol">Contains Alcohol:</label>
-            <input type="checkbox" id="contains_alcohol" name="contains_alcohol">
-
-            <label for="volume">Volume:</label>
-            <input type="text" id="volume" name="volume" required>
-
-            <input type="submit" value="Submit">
-        </form>
-
     </div>
+            <link rel="stylesheet" href="{% static 'RMS/css/table_form_css.css' %}">
+
 {% endblock content %}
