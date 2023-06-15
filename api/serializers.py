@@ -92,7 +92,7 @@ class StartEndHoursSerializer(serializers.ModelSerializer):
 
 class RestaurantTableBookingSerializer(serializers.ModelSerializer):
     startEndHours = StartEndHoursSerializer()
-    date = serializers.DateTimeField(format='%Y-%m-%d')
+    date = serializers.DateField(format='%Y-%m-%d')
 
     class Meta:
         model = RestaurantTableBooking

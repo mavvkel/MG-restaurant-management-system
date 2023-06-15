@@ -131,7 +131,7 @@ class RestaurantWorker(models.Model):
     roles = SeparatedValuesField(max_length=64,
                                  token=',',
                                  choices=RestaurantWorkerRole.choices,
-                                 blank=True)
+                                 null=True)
     disabled = models.BooleanField(default=False)
 
     # Not certain it works like that
