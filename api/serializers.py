@@ -6,14 +6,8 @@ from RMS.models.RestaurantTable import RestaurantTable, RestaurantTableProperty
 from RMS.models.RestaurantTableBooking import RestaurantTableBooking
 from RMS.models.StartEndHours import StartEndHours
 from RMS.models.RestaurantWorker import RestaurantWorker, RestaurantAvailability
-from CMS.models import tempCustomer
+from RMS.models.RestaurantWorkerRole import RestaurantWorkerRole
 from rest_polymorphic.serializers import PolymorphicSerializer
-from datetime import datetime
-
-class tempCustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = tempCustomer
-        fields = '__all__'
 
 
 class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
@@ -22,10 +16,16 @@ class RestaurantAvailabilitySerializer(serializers.ModelSerializer):
         fields = 'schedule'
 
 
+class RestaurantWorkerRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantWorkerRole
+        fields = 'role'
+
+
 class RestaurantWorkerSerializer(serializers.ModelSerializer):
     class Meta:
         model = RestaurantWorker
-        fields = ('id', 'name', 'role', 'availability')
+        fields = ('id', 'roles', 'disabled', 'availability')
 
 
 class RestaurantMenuEntrySerializer(serializers.ModelSerializer):
@@ -79,6 +79,7 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
 
         restaurant_table.properties.set(properties)
         return restaurant_table
+
 
 class StartEndHoursSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(format='%H:%M:%S')
