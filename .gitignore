@@ -11,7 +11,7 @@ media
 # Backup files # 
 *.bak 
 
-# If you are using PyCharm # 
+#AuthTokenSerializer If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -111,6 +111,8 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+Scripts/**/*
+pyvenv.cfg
 
 # mkdocs documentation 
 /site 
