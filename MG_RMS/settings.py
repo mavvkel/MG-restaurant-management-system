@@ -55,10 +55,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'polymorphic',
+    'knox',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -67,6 +69,7 @@ REST_FRAMEWORK = {
         #'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -156,3 +159,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(minutes=30),
+    'AUTH_HEADER_PREFIX': 'Bearer'
+}
