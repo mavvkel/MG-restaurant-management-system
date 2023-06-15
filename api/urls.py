@@ -13,8 +13,8 @@ urlpatterns = [
     # TODO: this v should return 403 for wrong credentials
     path('restaurant/table', views.RestaurantTableListView.as_view(), name='restaurant_table_list'),
     path('restaurant/worker/login', rf_views.obtain_auth_token, name='worker_login'),
-    path('restaurant/orders/', views.RestaurantOrderView.as_view(), name='restaurant-order-list'),
-    path('restaurant/orders/<int:pk>/', views.RestaurantOrderDetailView.as_view(), name='restaurant-order-detail'),
+    path('restaurant/orders/', views.RestaurantOrderView.as_view(), name='restaurant_order_list'),
+    path('restaurant/orders/<int:pk>/', views.RestaurantOrderDetailView.as_view(), name='restaurant_order_detail'),
     path('restaurant/table/booking', views.RestaurantTableBookingView.as_view(), name='restaurant_table_booking'),
     path('restaurant/table/property', views.RestaurantTablePropertyView.as_view(), name='restaurant_table_property'),
     path('restaurant/startend/hours', views.StartEndHoursView.as_view(), name='start_end_hours'),

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from RMS.models.RestaurantMenuEntry import RestaurantMenuEntry
 from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
 from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
-from RMS.models.RestaurantOrder import RestaurantOrder
+from RMS.models.RestaurantOrder import RestaurantOrder, MenuSelection
 from RMS.models.RestaurantTable import RestaurantTable, RestaurantTableProperty
 from RMS.models.RestaurantTableBooking import RestaurantTableBooking
 from RMS.models.StartEndHours import StartEndHours
@@ -92,41 +92,43 @@ class ContactDataSerializer(serializers.ModelSerializer):
         fields = ('name', 'phone', 'email', 'chatId')
 
 
+class MenuSelectionSerializer(serializers.ModelSerializer):
+    menu_entry_id = serializers.PrimaryKeyRelatedField(queryset=RestaurantMenuEntry.objects.all())
+
+    class Meta:
+        model = MenuSelection
+        fields = ['id', 'menu_entry_id', 'count']
+
+
 class RestaurantOrderSerializer(serializers.ModelSerializer):
-    customerContactData = ContactDataSerializer()
-    menuSelection = serializers.DictField(child=serializers.IntegerField())
+    menu_selection = MenuSelectionSerializer(many=True)
+    customer_contact_data = ContactDataSerializer()
+
+    class Meta:
+        model = RestaurantOrder
+        fields = ('id', 'customer_contact_data', 'menu_selection', 'date')
 
     def create(self, validated_data):
-        contact_data_data = validated_data.pop('customerContactData')
-        menu_selection_data = validated_data.pop('menuSelection')
+        menu_selection_data = validated_data.pop('menu_selection', [])
+        contact_data = validated_data.pop('customer_contact_data', {})
+        menu_selections = []
 
-        order = RestaurantOrder.objects.create(**validated_data)
+        for selection_data in menu_selection_data:
+            menu_entry_id = selection_data.get('menu_entry_id')
+            count = selection_data.get('count')
+            menu_selection, _ = MenuSelection.objects.get_or_create(menu_entry_id=menu_entry_id, count=count)
+            menu_selections.append(menu_selection)
 
-        contact_data = ContactData.objects.create(order=order, **contact_data_data)
+        contact_data_instance = ContactData.objects.create(**contact_data)
 
-        for menu_entry, count in menu_selection_data.items():
-            order.addOrUpdateMenuEntry(menu_entry, count)
+        restaurant_order = RestaurantOrder.objects.create(
+            customer_contact_data=contact_data_instance,
+            **validated_data
+        )
+        restaurant_order.menu_selection.set(menu_selections)
 
-        return order
+        return restaurant_order
 
-    def update(self, instance, validated_data):
-        contact_data_data = validated_data.pop('customerContactData')
-        menu_selection_data = validated_data.pop('menuSelection')
-
-        instance = super().update(instance, validated_data)
-
-        contact_data = instance.getCustomerContactData()
-        if contact_data:
-            contact_data.setName(contact_data_data.get('name', contact_data.getName()))
-            contact_data.setPhone(contact_data_data.get('phone', contact_data.getPhone()))
-            contact_data.setEmail(contact_data_data.get('email', contact_data.getEmail()))
-            contact_data.setChatId(contact_data_data.get('chatId', contact_data.getChatId()))
-            contact_data.save()
-
-        for menu_entry, count in menu_selection_data.items():
-            instance.addOrUpdateMenuEntry(menu_entry, count)
-
-        return instance
 
 class StartEndHoursSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(format='%H:%M:%S')

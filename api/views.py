@@ -69,6 +69,7 @@ class RestaurantTablePropertyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RestaurantTablePropertySerializer
     queryset = RestaurantTableProperty.objects.all()
 
+
 class RestaurantOrderView(generics.ListCreateAPIView):
     authentication_classes = []
     permission_classes = []

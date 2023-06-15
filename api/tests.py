@@ -282,18 +282,12 @@ class RestaurantOrderTests(APITestCase):
     def setUp(self) -> None:
         RestaurantOrder.objects.all().delete()
 
+        self.ContactData = ContactData.objects.create(name='test_name', email='email@gmail.com',
+                                                      phone='123456789', chatId='123456')
 
-        self.ContactData = ContactData.objects.create(name='test_name', email='test_email', phone='test_phone', chatId='test_chatId')
+        self.menu_entry = RestaurantMenuEntry.objects.create(name='Pizza', price=Decimal('10.99'))
 
-        self.menu_entry = RestaurantMenuEntry.objects.create(
-            name='Pizza',
-            price=Decimal('10.99')
-        )
-
-        self.order = RestaurantOrder.objects.create(
-            customer_contact_data=self.ContactData,
-            date=date(2023, 6, 13)
-        )
+        self.order = RestaurantOrder.objects.create(customer_contact_data=self.ContactData, date=date(2023, 6, 13))
 
         self.order.add_or_update_menu_entry(self.menu_entry, 2)
 
@@ -302,39 +296,51 @@ class RestaurantOrderTests(APITestCase):
         self.test_user1.save()
         self.assertEqual(User.objects.count(), 1)
 
-    def test_get_RestaurantTable_booking(self):
+    def test_get_RestaurantOrder_booking(self):
         """
 
         """
-        url = reverse('api:restaurant-order-list')
+        url = reverse('api:restaurant_order_list')
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 1)
         self.assertContains(response=response,
-                            text='"table":{"id":1,"capacity":4,"properties":[{"property":4}]},"startEndHours":'
-                                 '{"start_time":"00:05:23","end_time":"00:06:23"},"date":"2023-06-13"}]',
+                            text='{"id":1,"customer_contact_data":{"name":"test_name","phone":"123456789",'
+                                 '"email":"email@gmail.com","chatId":"123456"},"menu_selection":[{"id":1,'
+                                 '"menu_entry_id":1,"count":2}],"date":"2023-06-13T00:00:00Z"}',
                             count=1,
                             status_code=200)
 
-    def test_post_RestaurantTableBooking(self):
+    def test_post_RestaurantOrder(self):
         """
         Ensure unauthenticated POST method with DishRestaurantMenuEntry on /api/restaurant/menu endpoint is working.
         """
-        url = reverse('api:restaurant_table_booking')
+        url = reverse('api:restaurant_order_list')
         data = {
-            'startEndHours': {"start_time": "20:05:23", "end_time": "21:06:23"},
-            'table': {'capacity': 2, "properties": [{"property": 5}, {"property": 1}]},
-            'date': "2023-06-13"
+            'customer_contact_data': {
+                'name': 'test_name_2',
+                'phone': '1234567890',
+                'email': 'email@gmail.com',
+                'chatId': '223456'
+            },
+            'menu_selection': [
+                {
+                    'menu_entry_id': 1,
+                    'count': 3,
+                }
+            ],
+            'date': '2023-07-13T00:00:00Z'
         }
 
-        previous_count = RestaurantTableBooking.objects.count()
+        previous_count = RestaurantOrder.objects.count()
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(RestaurantTableBooking.objects.count(), previous_count + 1)
+        self.assertEqual(RestaurantOrder.objects.count(), previous_count + 1)
 
         response = self.client.get(url, format='json')
         self.assertContains(response=response,
-                            text='"table":{"id":2,"capacity":2,"properties":[{"property":5},{"property":1}]},"startEndHours":'
-                                 '{"start_time":"20:05:23","end_time":"21:06:23"},"date":"2023-06-13"}]',
+                            text='"customer_contact_data":{"name":"test_name_2","phone":"1234567890",'
+                                 '"email":"email@gmail.com","chatId":"223456"},"menu_selection":[{"id":2,'
+                                 '"menu_entry_id":1,"count":3}],"date":"2023-07-13T00:00:00Z"',
                             count=1,
                             status_code=200)

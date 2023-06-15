@@ -4,30 +4,31 @@ from decimal import Decimal
 from django.db import models
 
 
+class MenuSelection(models.Model):
+    menu_entry_id = models.ForeignKey(RestaurantMenuEntry, on_delete=models.CASCADE)
+    count = models.PositiveIntegerField()
+
+
 class RestaurantOrder(models.Model):
     customer_contact_data = models.ForeignKey(ContactData, on_delete=models.CASCADE)
-    menu_selection = models.ManyToManyField(RestaurantMenuEntry, through='MenuSelection', null=True)
+    menu_selection = models.ManyToManyField(MenuSelection, null=True)
     date = models.DateTimeField()
 
-    def add_or_update_menu_entry(self, menu_entry, count):
+    def add_or_update_menu_entry(self, menu_entry_id, count):
         if count > 0:
-            menu_selection, created = MenuSelection.objects.get_or_create(order=self, menu_entry=menu_entry)
-            menu_selection.count = count
-            menu_selection.save()
+            temp, _ = MenuSelection.objects.get_or_create(menu_entry_id=menu_entry_id, count=count)
+            self.menu_selection.add(temp)
 
-    def remove_menu_entry(self, menu_entry):
-        menu_selection = MenuSelection.objects.get(order=self, menu_entry=menu_entry)
+    def remove_menu_entry(self, menu_entry_id):
+        menu_selection = MenuSelection.objects.get(order_id=self, menu_entry_id=menu_entry_id)
         menu_selection.delete()
 
     def get_cumulative_price(self):
         total_price = Decimal(0)
-        menu_selections = MenuSelection.objects.filter(order=self)
+        menu_selections = MenuSelection.objects.filter(order_id=self)
         for menu_selection in menu_selections:
-            total_price += menu_selection.menu_entry.price * menu_selection.count
+            total_price += menu_selection.menu_entry_id.price * menu_selection.count
         return total_price
 
 
-class MenuSelection(models.Model):
-    order = models.ForeignKey(RestaurantOrder, on_delete=models.CASCADE)
-    menu_entry = models.ForeignKey(RestaurantMenuEntry, on_delete=models.CASCADE)
-    count = models.PositiveIntegerField()
+
