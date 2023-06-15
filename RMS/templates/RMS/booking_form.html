@@ -1,0 +1,117 @@
+{% extends 'RMS/main.html' %}
+{% load static %}
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#table').change(function() {
+    var selectedTableId = $(this).val();
+    if (selectedTableId) {
+      window.location.href = "{% url 'booking-form' table_id=0 %}".replace('0', selectedTableId);
+    } else {
+      window.location.href = "{% url 'booking-form' table_id=0 %}".replace('0', '');
+    }
+  });
+});
+</script>
+
+
+
+
+
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'tables' %}">
+                <button class="btn-primary">Back</button>
+            </a>
+        </div>
+
+        <div class="form-wrapper">
+            <h1>New Table Booking</h1>
+
+            <form method="POST" action="{% url 'booking-form' 1 %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="table">Table:</label>
+                    <select id="table" name="table" required class="form-input">
+                        <option value="" {% if not selected_table_id %}selected{% endif %}>-- Select a table --</option>
+                        {% for table in tables %}
+                            <option value="{{ table.id }}" {% if selected_table_id == table.id %}selected{% endif %}>
+                                Capacity: {{ table.capacity }} | Properties:
+                                {% for property in table.properties %}
+                                    {% if property.property == 1 %}
+                                        Near Window
+                                    {% elif property.property == 2 %}
+                                        Near Kitchen
+                                    {% elif property.property == 3 %}
+                                        In Garden
+                                    {% elif property.property == 4 %}
+                                        In Bar
+                                    {% elif property.property == 5 %}
+                                        Isolated
+                                    {% endif %}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {% if selected_table_id %}
+                    <div id="chosen-table-section" class="chosen-table">
+                        {% for table in tables %}
+                            {% if selected_table_id == table.id %}
+                                <div class="table">
+                                    <a href="{% url 'booking-form' table.id %}">
+                                        {% if table.capacity <= 6 %}
+                                            <img src="{% static 'RMS/images/table_' %}{{ table.capacity }}_chairs.png" alt="Table Image">
+                                        {% else %}
+                                            <img src="{% static 'RMS/images/table_many_chairs.png' %}" alt="Table Image">
+                                        {% endif %}
+                                    </a>
+                                    <div class="table-info">
+                                        <h3>Capacity: {{ table.capacity }}</h3>
+                                        {% for property in table.properties %}
+                                            {% if property.property == 1 %}
+                                                <p><i class="fa fa-window-maximize property-icon"></i> Near Window</p>
+                                            {% elif property.property == 2 %}
+                                                <p><i class="fa fa-cutlery property-icon"></i> Near Kitchen</p>
+                                            {% elif property.property == 3 %}
+                                                <p><i class="fa fa-tree property-icon"></i> In Garden</p>
+                                            {% elif property.property == 4 %}
+                                                <p><i class="fa fa-glass property-icon"></i> In Bar</p>
+                                            {% elif property.property == 5 %}
+                                                <p><i class="fa fa-shield property-icon"></i> Isolated</p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
+
+               <div class="form-group">
+                    <label for="start-time">Start Time:</label>
+                    <input type="time" id="start-time" name="start_time" required class="form-input" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="end-time">End Time:</label>
+                    <input type="time" id="end-time" name="end_time" required class="form-input" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required class="form-input">
+                </div>
+
+                <div class="submit-button">
+                    <input type="submit" value="Create Booking" class="form-submit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <link rel="stylesheet" href="{% static 'RMS/css/table_form_css.css' %}">
+{% endblock content %}

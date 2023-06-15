@@ -82,7 +82,6 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         restaurant_table.properties.set(properties)
         return restaurant_table
 
-
 class ContactDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactData
@@ -138,6 +137,7 @@ class StartEndHoursSerializer(serializers.ModelSerializer):
 class RestaurantTableBookingSerializer(serializers.ModelSerializer):
     startEndHours = StartEndHoursSerializer()
     date = serializers.DateField(format='%Y-%m-%d')
+
 
     class Meta:
         model = RestaurantTableBooking

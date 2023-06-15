@@ -14,8 +14,17 @@
         margin-bottom: 20px;
     }
 
-    .table img {
+    .table a {
         max-width: 50%;
+        height: auto;
+        object-fit: contain;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .table img {
+        max-width: 90%;
         height: auto;
         object-fit: contain;
         margin-right: 10px;

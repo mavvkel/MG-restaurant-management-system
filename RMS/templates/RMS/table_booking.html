@@ -3,7 +3,6 @@
 {% block content %}
 
 
-
 <div class="container">
     <div class="header">
         <h1>Table Management</h1>
@@ -11,13 +10,8 @@
     <div class="content-wrapper">
         <div class="left-section">
             <div>
-                <a class="button" href="{% url 'start' %}">
-                    <button class="btn-primary">Back to Start</button>
-                </a>
-            </div>
-            <div>
                 <h2>Filter Tables:</h2>
-                <form action="{% url 'tables' %}" method="get">
+                <form action="{% url 'tables' %}" method="get" id="filter-form">
                     <input type="number" name="capacity" placeholder="Enter capacity" value="{{ capacity }}">
                     <br>
                     <label for="property">Select Properties:</label><br>
@@ -31,25 +25,45 @@
                     <label for="property4">In Bar</label><br>
                     <input type="checkbox" id="property5" name="property" value="5" {% if '5' in selected_properties %}checked{% endif %}>
                     <label for="property5">Isolated</label><br>
+                    <h4>When available:</h4>
+                    <label for="start_time">Start Time:</label>
+                    <br>
+                    <input type="time" id="start_time" name="start_time" value="{{ start_time }}">
+                    <br>
+                    <label for="end_time">End Time:</label>
+                    <br>
+                    <input type="time" id="end_time" name="end_time" value="{{ end_time }}">
+                    <br>
+                    <label for="date">Date:</label><br>
+                    <input type="date" style="width: 100px" id="date" name="date" value="{{ date }}">
+                    <br>
+                    <button type="button" class="btn-secondary" onclick="clearFilters()">Clear</button>
                     <button type="submit" class="btn-primary">Filter</button>
                 </form>
             </div>
+
         </div>
         <div class="right-section">
             <div>
                 <a href="{% url 'table-form' %}">
-                    <button class="btn-primary">Add New Table</button>
+                    <button class="btn-primary">Add new table</button>
+                </a>
+                <a class="button" href="{% url 'booking-form' 1 %}">
+                    <button class="btn-primary">Add new booking</button>
                 </a>
                 <h4>{{ filtered_tables|length }} tables displayed</h4>
             </div>
+
             <div class="table-list">
                 {% for table in filtered_tables %}
                     <div class="table">
-                        {% if table.capacity <= 6 %}
-                            <img src="{% static 'RMS/images/table_' %}{{ table.capacity }}_chairs.png" alt="Table Image">
-                        {% else %}
-                            <img src="{% static 'RMS/images/table_many_chairs.png' %}" alt="Table Image">
-                        {% endif %}
+                        <a href="{% url 'booking-form' table.id %}">
+                            {% if table.capacity <= 6 %}
+                                <img src="{% static 'RMS/images/table_' %}{{ table.capacity }}_chairs.png" alt="Table Image">
+                            {% else %}
+                                <img src="{% static 'RMS/images/table_many_chairs.png' %}" alt="Table Image">
+                            {% endif %}
+                        </a>
                         <div class="table-info">
                             <h3>Capacity: {{ table.capacity }}</h3>
                             {% for property in table.properties %}
@@ -65,16 +79,24 @@
                                     <p><i class="fa fa-shield property-icon"></i> Isolated</p>
                                 {% endif %}
                             {% endfor %}
+
                         </div>
                     </div>
                 {% endfor %}
-
             </div>
+
+
         </div>
     </div>
-<link rel="stylesheet" href="{% static 'RMS/css/table_booking_css.css' %}">
 </div>
+<script>
+    function clearFilters() {
+        document.getElementById("filter-form").reset();
+        document.getElementById("start_time").value = '';
+        document.getElementById("end_time").value = '';
+        document.getElementById("date").value = '';
+    }
+</script>
 
+<link rel="stylesheet" href="{% static 'RMS/css/table_booking_css.css' %}">
 {% endblock content %}
-
-

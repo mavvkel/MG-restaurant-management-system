@@ -56,3 +56,35 @@
 .form-submit:hover {
     background-color: #0056b3;
 }
+
+.chosen-table {
+  margin-top: 20px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.chosen-table .table {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chosen-table .table img {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.chosen-table .table-info h3 {
+  margin-top: 0;
+}
+
+.chosen-table .table-info p {
+  margin-bottom: 5px;
+}
+
+.chosen-table .property-icon {
+  margin-right: 5px;
+  color: #555;
+}
