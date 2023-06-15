@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.contrib.auth.models import User
-from rest_framework.test import force_authenticate, APIRequestFactory, APITestCase
+from rest_framework.test import APITestCase
 from decimal import Decimal
 from rest_framework import status
 from RMS.models.DishRestaurantMenuEntry import *
@@ -8,13 +8,12 @@ from RMS.models.DrinkRestaurantMenuEntry import *
 from RMS.models.RestaurantMenuEntry import *
 from RMS.models.RestaurantOrder import RestaurantOrder
 from RMS.models.RestaurantTable import *
+from RMS.models.RestaurantWorkerRole import RestaurantWorkerRole
 from RMS.models.RestaurantTableBooking import RestaurantTableBooking
 from RMS.models.ContactData import ContactData
 from RMS.models.StartEndHours import StartEndHours
-from api.serializers import RestaurantTableBookingSerializer
-from api.views import RestaurantMenuEntryListView, RestaurantMenuEntryDetailView
 
-from datetime import date, datetime
+from datetime import time, date
 
 
 class RestaurantMenuEntryListViewTests(APITestCase):
@@ -170,14 +169,11 @@ class RestaurantTableListViewTests(APITestCase):
                             status_code=200)
 
 
-
 class StartEndHoursViewTests(APITestCase):
     def setUp(self) -> None:
         StartEndHours.objects.all().delete()
-        self.startEndHoursTemp = StartEndHours.objects.create(start_time=datetime.fromisoformat(
-                                                                '2011-11-04T00:05:23+04:00').time(),
-                                                              end_time=datetime.fromisoformat(
-                                                                  '2011-11-04T00:06:23+04:00').time())
+        self.startEndHoursTemp = StartEndHours.objects.create(start_time=time(hour=5, minute=23),
+                                                              end_time=time(hour=6, minute=23))
 
         self.test_user1 = User.objects.create(username='test_user1')
         self.test_user1.set_password('123')
@@ -190,7 +186,7 @@ class StartEndHoursViewTests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 1)
         self.assertContains(response=response,
-                            text='"start_time":"00:05:23","end_time":"00:06:23"',
+                            text='"start_time":"05:23:00","end_time":"06:23:00"',
                             count=1,
                             status_code=200)
 
@@ -206,10 +202,8 @@ class StartEndHoursViewTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(StartEndHours.objects.count(), previous_count + 1)
-        self.assertTrue(StartEndHours.objects.filter(start_time=datetime.fromisoformat(
-                                                                '2011-11-04T10:02:23+04:00').time()
-                                                     , end_time=datetime.fromisoformat(
-                                                                '2011-11-04T19:02:23+04:00').time()).exists())
+        self.assertTrue(StartEndHours.objects.filter(start_time=time(hour=10, minute=2, second=23),
+                                                     end_time=time(hour=19, minute=2, second=23)).exists())
 
         response = self.client.get(url, format='json')
         self.assertContains(response=response,
@@ -226,14 +220,15 @@ class RestaurantTableBookingViewTests(APITestCase):
         self.smallTable = RestaurantTable.objects.create(capacity=4)
         self.smallTable.properties.add(RestaurantTableProperty.objects.create(property=4))
 
-        start_time_temp = datetime.fromisoformat('2011-11-04T00:05:23+04:00').time()
-        end_time_temp = datetime.fromisoformat('2011-11-04T00:06:23+04:00').time()
+        start_time_temp = time(hour=5, minute=23)
+        end_time_temp = time(hour=6, minute=23)
         self.startEndHoursTemp = StartEndHours.objects.create(start_time=start_time_temp, end_time=end_time_temp)
 
         self.assertEqual(RestaurantTableBooking.objects.all().exists(), False)
         self.booking_test = RestaurantTableBooking.objects.create(table=self.smallTable,
                                                                   date=date(2023, 6, 13),
                                                                   startEndHours=self.startEndHoursTemp)
+        self.booking_test.save()
 
         self.test_user1 = User.objects.create(username='test_user1')
         self.test_user1.set_password('123')
@@ -249,7 +244,7 @@ class RestaurantTableBookingViewTests(APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertContains(response=response,
                             text='"table":1,"startEndHours":'
-                                 '{"start_time":"00:05:23","end_time":"00:06:23"},"date":"2023-06-13"}]',
+                                 '{"start_time":"05:23:00","end_time":"06:23:00"},"date":"2023-06-13"}]',
                             count=1,
                             status_code=200)
 

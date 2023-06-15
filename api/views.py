@@ -1,37 +1,42 @@
-from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
+from django.contrib.auth import login
 from rest_framework import generics
-from rest_framework import status
+from knox.views import LoginView as KnoxLoginView
 from rest_framework.permissions import *
-from rest_framework.authentication import BasicAuthentication
-from CMS.models import tempCustomer
-from RMS.models import RestaurantMenuEntry
 from .serializers import *
-from RMS.models.DishRestaurantMenuEntry import DishRestaurantMenuEntry
-from RMS.models.DrinkRestaurantMenuEntry import DrinkRestaurantMenuEntry
-from RMS.models.RestaurantWorker import *
-from rest_framework.authentication import TokenAuthentication
-from itertools import chain
+from RMS.models.RestaurantWorker import RestaurantWorker, RestaurantAvailability
+from MG_RMS import settings
+from .serializers import RestaurantWorkerSerializer
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 
-class BearerAuthentication(TokenAuthentication):
-    keyword = 'Bearer'
+class WorkerLoginView(KnoxLoginView):
+    permission_classes = [AllowAny]
 
+    def get_post_response_data(self, request, token, instance):
 
-@api_view(['GET'])
-def getData(request):
-    items = tempCustomer.objects.all()
-    serializer = tempCustomerSerializer(items, many= True)
-    return Response(serializer.data)
+        worker = RestaurantWorker.objects.get(user=request.user)
 
-@api_view(['POST'])
-def addItem(request):
-    serializer = tempCustomerSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+        data = {
+            'access_token': token,
+            'token_type': settings.REST_KNOX['AUTH_HEADER_PREFIX'],
+            'expires_at': self.format_expiry_datetime(instance.expiry),
+            'user': {
+                'associated_id': worker.id,
+                'username': worker.user.username,
+                'roles': worker.roles,
+                'email': worker.user.email,
+                'disabled': worker.disabled
+            }
+        }
+
+        return data
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super(WorkerLoginView, self).post(request, format=None)
 
 
 class CurrentRestaurantWorkerView(generics.ListCreateAPIView):
@@ -50,7 +55,7 @@ class RestaurantMenuEntryListView(generics.ListCreateAPIView):
 
 # TODO: status 409
 class RestaurantMenuEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [BearerAuthentication]
+    authentication_classes = []
     permission_classes = []
     serializer_class = RestaurantMenuEntryPolymorphicSerializer
     queryset = RestaurantMenuEntry.objects.all()
