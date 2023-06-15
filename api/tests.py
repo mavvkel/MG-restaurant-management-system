@@ -1,3 +1,5 @@
+import datetime
+
 from django.urls import reverse
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
@@ -280,8 +282,9 @@ class RestaurantOrderTests(APITestCase):
                                                       phone='123456789', chatId='123456')
 
         self.menu_entry = RestaurantMenuEntry.objects.create(name='Pizza', price=Decimal('10.99'))
+        date = datetime.datetime(year=2023, month=6, day=13, hour=14, minute=10, tzinfo=datetime.UTC)
 
-        self.order = RestaurantOrder.objects.create(customer_contact_data=self.ContactData, date=date(2023, 6, 13))
+        self.order = RestaurantOrder.objects.create(customer_contact_data=self.ContactData, date=date)
 
         self.order.add_or_update_menu_entry(self.menu_entry, 2)
 
@@ -300,7 +303,7 @@ class RestaurantOrderTests(APITestCase):
         self.assertContains(response=response,
                             text='{"id":1,"customer_contact_data":{"name":"test_name","phone":"123456789",'
                                  '"email":"email@gmail.com","chatId":"123456"},"menu_selection":[{"id":1,'
-                                 '"menu_entry_id":1,"count":2}],"date":"2023-06-13T00:00:00Z"}',
+                                 '"menu_entry_id":1,"count":2}],"date":"2023-06-13T14:10:00Z"}',
                             count=1,
                             status_code=200)
 

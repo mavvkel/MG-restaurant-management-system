@@ -11,7 +11,7 @@ class MenuSelection(models.Model):
 
 class RestaurantOrder(models.Model):
     customer_contact_data = models.ForeignKey(ContactData, on_delete=models.CASCADE)
-    menu_selection = models.ManyToManyField(MenuSelection, null=True)
+    menu_selection = models.ManyToManyField(MenuSelection)
     date = models.DateTimeField()
 
     def add_or_update_menu_entry(self, menu_entry_id, count):
